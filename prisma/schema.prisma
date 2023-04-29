@@ -2,16 +2,77 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model BlogPost {
+  id          Int        @id @default(autoincrement())
+  url         String     @unique
+  author      String
+  title       String
+  content     String
+  summary     String
+  twitterauthor String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  tweeted     Boolean    @default(false)
+  bookmarks   Bookmark[] @relation("bookmarks")
+  likes       Like[]     @relation("likes")
+}
+
+model Bookmark {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  blogId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  blogPost  BlogPost @relation("bookmarks", fields: [blogId], references: [id])
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  blogId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  blogPost  BlogPost @relation("likes", fields: [blogId], references: [id])
+}
+
+
+
+
+model WhatsNew {
+  id         Int          @id @default(autoincrement())
+  url        String       @unique
+  author     String
+  title      String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  tweeted    Boolean      @default(false)
+}
+
+model YoutubeVideos {
+  id        Int      @id @default(autoincrement())
+  url       String   @unique
+  author    String
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tweeted   Boolean  @default(false)
+}
+
+model IntuneDocs {
+  id        Int      @id @default(autoincrement())
+  url       String   @unique
+  author    String
+  title     String
+  summary   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tweeted   Boolean  @default(false)
 }

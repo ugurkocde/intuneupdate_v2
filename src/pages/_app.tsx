@@ -1,11 +1,36 @@
-import { type AppType } from "next/app";
+import "tailwindcss/tailwind.css";
+import "../styles/globals.css";
+import type { AppProps } from "next/app";
+import {
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+  RedirectToSignIn,
+} from "@clerk/nextjs";
+import { useRouter } from "next/router";
 
-import { api } from "~/utils/api";
+const publicPages = ["/"];
 
-import "~/styles/globals.css";
+function MyApp({ Component, pageProps }: AppProps) {
+  const { pathname } = useRouter();
+  const isPublicPage = publicPages.includes(pathname);
+  return (
+    <ClerkProvider {...pageProps}>
+      {isPublicPage ? (
+        <Component {...pageProps} />
+      ) : (
+        <>
+          <SignedIn>
+            <Component {...pageProps} />
+          </SignedIn>
 
-const MyApp: AppType = ({ Component, pageProps }) => {
-  return <Component {...pageProps} />;
-};
+          <SignedOut>
+            <RedirectToSignIn />
+          </SignedOut>
+        </>
+      )}
+    </ClerkProvider>
+  );
+}
 
-export default api.withTRPC(MyApp);
+export default MyApp;
