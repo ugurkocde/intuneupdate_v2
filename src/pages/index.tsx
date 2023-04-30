@@ -62,6 +62,10 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      const shareButton =
+        shareButtonContainerRef.current?.querySelector("button");
+      const isShareButton = event.target === shareButton;
+
       if (
         shareButtonContainerRef.current &&
         !shareButtonContainerRef.current.contains(event.target as Node) &&
@@ -73,7 +77,11 @@ const Home: NextPage = () => {
           !authorDropdownRef.current.contains(event.target as Node))
       ) {
         event.preventDefault();
-        setOpenDropdownId(null);
+        if (isShareButton && openDropdownId !== null) {
+          setOpenDropdownId(null);
+        } else if (!isShareButton) {
+          setOpenDropdownId(null);
+        }
       }
     };
 
@@ -85,11 +93,7 @@ const Home: NextPage = () => {
   }, []);
 
   const toggleDropdown = (id: number) => {
-    if (openDropdownId === id) {
-      setOpenDropdownId(null);
-    } else {
-      setOpenDropdownId(id);
-    }
+    setOpenDropdownId(openDropdownId === id ? null : id);
   };
 
   const shareOnTwitter = (title: string, url: string) => {
@@ -147,6 +151,16 @@ const Home: NextPage = () => {
     };
     fetchBlogs();
 
+    const savedSearchTerm = localStorage.getItem("searchTerm");
+    if (savedSearchTerm) {
+      setSearchTerm(savedSearchTerm);
+    }
+
+    const savedSelectedAuthor = localStorage.getItem("selectedAuthor");
+    if (savedSelectedAuthor) {
+      setSelectedAuthor(savedSelectedAuthor);
+    }
+
     const fetchBookmarks = async () => {
       if (user) {
         const data = await getUserBookmarks(user.id);
@@ -155,6 +169,20 @@ const Home: NextPage = () => {
     };
     fetchBookmarks();
   }, [user]);
+
+  const onSearchTermChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearchTerm = event.target.value;
+    setSearchTerm(newSearchTerm);
+    localStorage.setItem("searchTerm", newSearchTerm);
+  };
+
+  const onSelectedAuthorChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const newSelectedAuthor = event.target.value;
+    setSelectedAuthor(newSelectedAuthor);
+    localStorage.setItem("selectedAuthor", newSelectedAuthor);
+  };
 
   const handleBookmark = async (blogId: number) => {
     if (!user) {
@@ -275,7 +303,7 @@ const Home: NextPage = () => {
               type="text"
               placeholder="Search for blog posts"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={onSearchTermChange}
               style={{ textAlign: "center" }}
             />
           </div>
@@ -285,7 +313,7 @@ const Home: NextPage = () => {
               ref={authorDropdownRef}
               className="focus:shadow-outline block w-full appearance-none rounded border border-gray-300 bg-white px-4 py-2 pr-8 leading-tight hover:border-gray-400 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-600"
               value={selectedAuthor}
-              onChange={(e) => setSelectedAuthor(e.target.value)}
+              onChange={onSelectedAuthorChange}
             >
               <option value="">All authors</option>
               {uniqueAuthors.map((author) => (
@@ -362,6 +390,7 @@ const Home: NextPage = () => {
                         <RxOpenInNewWindow></RxOpenInNewWindow>
                       </button>
                     </a>
+
                     <div
                       className="relative inline-block"
                       ref={shareButtonContainerRef}
@@ -388,16 +417,20 @@ const Home: NextPage = () => {
                           >
                             <button
                               className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                              onClick={() =>
-                                shareOnTwitter(blog.title, blog.url)
-                              }
+                              onClick={() => {
+                                shareOnTwitter(blog.title, blog.url);
+                                toggleDropdown(blog.id);
+                              }}
                             >
                               <BsTwitter className="mr-2"></BsTwitter>
                               <span>Share on Twitter</span>
                             </button>
                             <button
                               className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                              onClick={() => shareOnLinkedIn(blog.url)}
+                              onClick={() => {
+                                shareOnLinkedIn(blog.url);
+                                toggleDropdown(blog.id);
+                              }}
                             >
                               <BsLinkedin className="mr-2"></BsLinkedin>
                               <span>Share on LinkedIn</span>
@@ -405,7 +438,10 @@ const Home: NextPage = () => {
 
                             <button
                               className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                              onClick={() => copyURL(blog.url)}
+                              onClick={() => {
+                                copyURL(blog.url);
+                                toggleDropdown(blog.id);
+                              }}
                             >
                               <FiCopy className="mr-2"></FiCopy>
                               <span>Copy URL</span>
