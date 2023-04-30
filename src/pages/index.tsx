@@ -113,9 +113,12 @@ const Home: NextPage = () => {
   }, [blogs]);
 
   const filteredBlogs = blogs
-    .filter((blog) =>
-      blog.title.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    .filter((blog) => {
+      const keywords = searchTerm.toLowerCase().split(" ");
+      return keywords.every((keyword) =>
+        blog.title.toLowerCase().includes(keyword)
+      );
+    })
     .filter((blog) => selectedAuthor === "" || blog.author === selectedAuthor);
 
   const toggleSummary = (index: number) => {
