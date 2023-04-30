@@ -178,7 +178,7 @@ const Home: NextPage = () => {
 
   const handleBookmark = async (blogId: number) => {
     if (!user) {
-      toast.error("Please sign in to bookmark this blog post.  ");
+      toast.error("Please sign in to bookmark this blog post.   ");
       return;
     }
 
