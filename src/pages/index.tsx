@@ -10,20 +10,13 @@ import {
 import { MdPrivacyTip } from "react-icons/md";
 import { GrCompliance } from "react-icons/gr";
 import { RxOpenInNewWindow } from "react-icons/rx";
-import { AiOutlineSearch } from "react-icons/ai";
 import { HiOutlineSelector } from "react-icons/hi";
 import type { NextPage } from "next";
 import { getBlogs } from "../getBlogs";
 import "tailwindcss/tailwind.css";
 import { useUser } from "@clerk/clerk-react";
 import { getUserBookmarks, addBookmark, removeBookmark } from "../bookmark";
-import {
-  ClerkProvider,
-  SignedIn,
-  SignedOut,
-  RedirectToSignIn,
-  UserButton,
-} from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
