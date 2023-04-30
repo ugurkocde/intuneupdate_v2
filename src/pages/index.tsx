@@ -62,10 +62,6 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const shareButton =
-        shareButtonContainerRef.current?.querySelector("button");
-      const isShareButton = event.target === shareButton;
-
       if (
         shareButtonContainerRef.current &&
         !shareButtonContainerRef.current.contains(event.target as Node) &&
@@ -77,11 +73,7 @@ const Home: NextPage = () => {
           !authorDropdownRef.current.contains(event.target as Node))
       ) {
         event.preventDefault();
-        if (isShareButton && openDropdownId !== null) {
-          setOpenDropdownId(null);
-        } else if (!isShareButton) {
-          setOpenDropdownId(null);
-        }
+        setOpenDropdownId(null);
       }
     };
 
@@ -93,7 +85,7 @@ const Home: NextPage = () => {
   }, []);
 
   const toggleDropdown = (id: number) => {
-    setOpenDropdownId(openDropdownId === id ? null : id);
+    setOpenDropdownId((prevState) => (prevState === id ? null : id));
   };
 
   const shareOnTwitter = (title: string, url: string) => {
