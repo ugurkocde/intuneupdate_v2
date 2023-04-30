@@ -255,8 +255,11 @@ const Home: NextPage = () => {
           <div className="flex items-center justify-between">
             <div className="w-1/4"></div>
             <div className="w-1/2 text-center">
-              <h1 className="mb-4 mt-2 text-5xl font-bold">Intune Update</h1>
+              <h1 className="mb-4 mt-2 text-3xl font-bold sm:text-5xl">
+                Intune Update
+              </h1>
             </div>
+
             <div className="w-1/4">
               <ul className="flex items-center justify-end">
                 <SignedOut>
@@ -332,7 +335,7 @@ const Home: NextPage = () => {
           <div className="spinner"></div>
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filteredBlogs.map((blog: any) => (
             <div
               key={blog.id}
