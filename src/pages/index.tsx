@@ -178,7 +178,7 @@ const Home: NextPage = () => {
 
   const handleBookmark = async (blogId: number) => {
     if (!user) {
-      toast.error("Please sign in to bookmark this blog post.   ");
+      toast.error("Please sign in to bookmark this blog post.");
       return;
     }
 
@@ -494,15 +494,14 @@ const Home: NextPage = () => {
                   <BsGithub className="text-xl hover:text-blue-700" />
                 </a>
               </div>
-
-              <div className="text-s md:test-xs text-center font-semibold md:w-1/2">
-                {" "}
+              <div className="sm:text-s text-center text-sm font-semibold md:w-1/2 md:text-base">
                 <a>
                   Stay up-to-date on the latest Intune related news from
                   industry experts and Microsoft, with AI generated summaries
                   and more.
                 </a>
               </div>
+
               <div className="flex items-center space-x-4">
                 <a
                   href="https://ugurkoc.de/privacy-policy/"
