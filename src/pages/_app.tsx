@@ -8,6 +8,7 @@ import {
   RedirectToSignIn,
 } from "@clerk/nextjs";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const publicPages = ["/"];
 
@@ -15,21 +16,27 @@ function MyApp({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter();
   const isPublicPage = publicPages.includes(pathname);
   return (
-    <ClerkProvider {...pageProps}>
-      {isPublicPage ? (
-        <Component {...pageProps} />
-      ) : (
-        <>
-          <SignedIn>
-            <Component {...pageProps} />
-          </SignedIn>
+    <>
+      <Head>
+        <title>Intune Update</title>
+        <link rel="icon" href="/Logo.jpg" />
+      </Head>
+      <ClerkProvider {...pageProps}>
+        {isPublicPage ? (
+          <Component {...pageProps} />
+        ) : (
+          <>
+            <SignedIn>
+              <Component {...pageProps} />
+            </SignedIn>
 
-          <SignedOut>
-            <RedirectToSignIn />
-          </SignedOut>
-        </>
-      )}
-    </ClerkProvider>
+            <SignedOut>
+              <RedirectToSignIn />
+            </SignedOut>
+          </>
+        )}
+      </ClerkProvider>
+    </>
   );
 }
 

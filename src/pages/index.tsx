@@ -249,7 +249,7 @@ const Home: NextPage = () => {
       >
         <div className="container mx-auto">
           <div className="flex items-center justify-between">
-            <div className="w-1/4"></div>
+            <div className="w-1/4"> </div>
             <div className="w-1/2 text-center">
               <h1 className="mb-4 mt-2 text-3xl font-bold sm:text-5xl">
                 Intune Update
@@ -268,10 +268,17 @@ const Home: NextPage = () => {
                   </li>
                 </SignedOut>
                 <SignedIn>
-                  <li className="mr-4">
+                  <li className="mr-4 hidden sm:block">
                     <Link href="/bookmarks">
                       <button className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
                         My Bookmarks
+                      </button>
+                    </Link>
+                  </li>
+                  <li className="mr-4 block sm:hidden">
+                    <Link href="/bookmarks">
+                      <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
+                        <BsBookmarkPlusFill />
                       </button>
                     </Link>
                   </li>
@@ -460,7 +467,9 @@ const Home: NextPage = () => {
                 >
                   {blog.summary}
                 </div>
-                <LikeButton blogId={blog.id} userId={user?.id || null} />
+                <div>
+                  <LikeButton blogId={blog.id} userId={user?.id || null} />
+                </div>
               </div>
             </div>
           ))}
@@ -480,14 +489,6 @@ const Home: NextPage = () => {
                   aria-label="Twitter"
                 >
                   <BsTwitter className="text-xl hover:text-blue-500" />
-                </a>
-                <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub"
-                >
-                  <BsGithub className="text-xl hover:text-blue-700" />
                 </a>
               </div>
               <div className="sm:text-s text-center text-sm font-semibold md:w-1/2 md:text-base">
