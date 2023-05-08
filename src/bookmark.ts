@@ -27,18 +27,23 @@ export async function removeBookmark(userId: string, blogId: number) {
   return data;
 }
 
-export async function getUserBookmarks(userId: string) {
+export const getUserBookmarks = async (userId: string) => {
   const { data, error } = await supabase
     .from("Bookmark")
-    .select(`*, BlogPost(*)`)
-    .eq("userId", userId);
+    .select("*, BlogPost(*)")
+    .eq("userId", userId)
+    .order("createdAt", { ascending: false });
 
-  if (error) {
-    throw error;
+  const { data: videoBookmarks, error: videoError } = await supabase
+    .from("VideoBookmark")
+    .select("*, YoutubeVideos(*)")
+    .eq("userId", userId)
+    .order("createdAt", { ascending: false });
+
+  if (error || videoError) {
+    console.error("Error fetching bookmarks", error, videoError);
+    return;
   }
 
-  return data.reduce((acc, bookmark) => {
-    acc[bookmark.blogId] = bookmark;
-    return acc;
-  }, {});
-}
+  return { blogBookmarks: data, videoBookmarks };
+};

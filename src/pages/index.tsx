@@ -13,6 +13,7 @@ import { RxOpenInNewWindow } from "react-icons/rx";
 import { HiOutlineSelector } from "react-icons/hi";
 import type { NextPage } from "next";
 import { getBlogs } from "../getBlogs";
+import { getVideos } from "../getVideos";
 import "tailwindcss/tailwind.css";
 import { useUser } from "@clerk/clerk-react";
 import { getUserBookmarks, addBookmark, removeBookmark } from "../bookmark";
@@ -22,12 +23,21 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
 import LikeButton from "./LikeButton";
+import YoutubeVideoCard from "../components/YoutubeVideoCard";
 
 interface Blog {
   id: number;
   author: string;
   title: string;
   releaseDate: string;
+}
+
+interface VideoData {
+  id: number;
+  url: string;
+  author: string;
+  title: string;
+  createdAt: string;
 }
 
 const Home: NextPage = () => {
@@ -41,9 +51,12 @@ const Home: NextPage = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAuthor, setSelectedAuthor] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState("All");
   const router = useRouter();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
+  const [videos, setVideos] = useState<VideoData[]>([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const shareButtonContainerRef = useRef<HTMLDivElement>(null);
 
@@ -52,6 +65,14 @@ const Home: NextPage = () => {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   const authorDropdownRef = useRef<HTMLSelectElement | null>(null);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      const data = await getVideos();
+      setVideos(data);
+    };
+    fetchVideos();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -234,11 +255,23 @@ const Home: NextPage = () => {
     fetchBlogs();
   }, []);
 
-  const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
+  const combinedItems = useMemo(() => {
+    const sortedBlogs = filteredBlogs.map((blog) => ({
+      ...blog,
+      itemType: "blog",
+      date: new Date(blog.releaseDate),
+    }));
 
-  const openCommentModal = () => {
-    setIsCommentModalOpen(true);
-  };
+    const sortedVideos = videos.map((video) => ({
+      ...video,
+      itemType: "video",
+      date: new Date(video.createdAt),
+    }));
+
+    return [...sortedBlogs, ...sortedVideos].sort(
+      (a, b) => b.date.valueOf() - a.date.valueOf()
+    );
+  }, [filteredBlogs, videos]);
 
   return (
     <div className="container mx-auto">
@@ -330,6 +363,55 @@ const Home: NextPage = () => {
               </svg>
             </div>
           </div>
+          <div className="relative inline-block">
+            <button
+              className="rounded border border-gray-300 px-4 py-2 font-bold hover:border-gray-400"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            >
+              {selectedFilter}
+            </button>
+            {dropdownOpen && (
+              <div
+                className="absolute left-0 mt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <div
+                  className="py-1"
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="options-menu"
+                >
+                  <button
+                    className="w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={() => {
+                      setSelectedFilter("All");
+                      setDropdownOpen(false);
+                    }}
+                  >
+                    All
+                  </button>
+                  <button
+                    className="w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={() => {
+                      setSelectedFilter("Blogs");
+                      setDropdownOpen(false);
+                    }}
+                  >
+                    Blogs
+                  </button>
+                  <button
+                    className="w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={() => {
+                      setSelectedFilter("YouTube");
+                      setDropdownOpen(false);
+                    }}
+                  >
+                    YouTube
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -339,140 +421,159 @@ const Home: NextPage = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredBlogs.map((blog: any) => (
-            <div
-              key={blog.id}
-              className="rounded bg-white p-4 shadow transition-shadow duration-300 hover:shadow-lg"
-            >
-              <h2 className="mb-2 text-xl font-bold sm:text-lg">
-                {blog.title}
-              </h2>
+          {selectedFilter !== "YouTube" &&
+            filteredBlogs.map((blog: any) => (
+              <div
+                key={blog.id}
+                className="rounded bg-white p-4 shadow transition-shadow duration-300 hover:shadow-lg"
+              >
+                <h2 className="mb-2 text-xl font-bold sm:text-lg">
+                  {blog.title}
+                </h2>
 
-              <div className="text-gray-700">
-                <p className="mb-2 text-sm font-semibold">
-                  {blog.author}
-                  <span className="mx-1">-</span>
-                  {new Date(blog.createdAt).toLocaleDateString()}
-                </p>
-                <div className="mb-2 flex flex-col">
-                  <div className="mb-2 flex flex-wrap items-center">
-                    {!userBookmarks[blog.id] && (
-                      <button
-                        className="mb-2 mr-2 rounded border border-gray-300 bg-green-500 p-4 px-4 py-2 font-bold text-white hover:bg-green-700 md:mb-0"
-                        onClick={() => handleBookmark(blog.id)}
-                        title="Add Bookmark"
-                      >
-                        <BsBookmarkPlusFill></BsBookmarkPlusFill>
-                      </button>
-                    )}
-                    {userBookmarks[blog.id] && (
-                      <>
+                <div className="text-gray-700">
+                  <p className="mb-2 text-sm font-semibold">
+                    {blog.author}
+                    <span className="mx-1">-</span>
+                    {new Date(blog.createdAt).toLocaleDateString()}
+                  </p>
+                  <div className="mb-2 flex flex-col">
+                    <div className="mb-2 flex flex-wrap items-center">
+                      {!userBookmarks[blog.id] && (
                         <button
-                          className="mb-2 mr-2 rounded border border-gray-300 bg-red-500 p-4 px-4 py-2 font-bold text-white hover:bg-red-700 md:mb-0"
-                          onClick={() => handleRemoveBookmark(blog.id)}
-                          title="Remove bookmark"
+                          className="mb-2 mr-2 rounded border border-gray-300 bg-green-500 p-4 px-4 py-2 font-bold text-white hover:bg-green-700 md:mb-0"
+                          onClick={() => handleBookmark(blog.id)}
+                          title="Add Bookmark"
                         >
-                          <BsBookmarkDashFill></BsBookmarkDashFill>
+                          <BsBookmarkPlusFill></BsBookmarkPlusFill>
                         </button>
-                      </>
-                    )}
-                    <a
-                      href={blog.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <button
-                        className="mb-2 mr-2 rounded border border-gray-300 bg-blue-500 p-4 px-4 py-2 font-bold text-white hover:bg-blue-700 md:mb-0"
-                        title="Open blog post in a new tab"
-                      >
-                        <RxOpenInNewWindow></RxOpenInNewWindow>
-                      </button>
-                    </a>
-
-                    <div
-                      className="relative inline-block"
-                      ref={shareButtonContainerRef}
-                    >
-                      <button
-                        className="mb-2 mr-2 rounded border border-gray-300 px-4 py-2 font-bold hover:border-gray-400 md:mb-0"
-                        onClick={() => toggleDropdown(blog.id)}
-                        title="Share"
-                      >
-                        <FiShare2></FiShare2>
-                      </button>
-
-                      {openDropdownId === blog.id && (
-                        <div
-                          ref={dropdownRef}
-                          className="absolute left-0 mt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
-                          onClick={(event) => event.stopPropagation()}
-                        >
-                          <div
-                            className="py-1"
-                            role="menu"
-                            aria-orientation="vertical"
-                            aria-labelledby="options-menu"
-                          >
-                            <button
-                              className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                              onClick={() => {
-                                shareOnTwitter(blog.title, blog.url);
-                                toggleDropdown(blog.id);
-                              }}
-                            >
-                              <BsTwitter className="mr-2"></BsTwitter>
-                              <span>Share on Twitter</span>
-                            </button>
-                            <button
-                              className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                              onClick={() => {
-                                shareOnLinkedIn(blog.url);
-                                toggleDropdown(blog.id);
-                              }}
-                            >
-                              <BsLinkedin className="mr-2"></BsLinkedin>
-                              <span>Share on LinkedIn</span>
-                            </button>
-
-                            <button
-                              className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                              onClick={() => {
-                                copyURL(blog.url);
-                                toggleDropdown(blog.id);
-                              }}
-                            >
-                              <FiCopy className="mr-2"></FiCopy>
-                              <span>Copy URL</span>
-                            </button>
-                          </div>
-                        </div>
                       )}
+                      {userBookmarks[blog.id] && (
+                        <>
+                          <button
+                            className="mb-2 mr-2 rounded border border-gray-300 bg-red-500 p-4 px-4 py-2 font-bold text-white hover:bg-red-700 md:mb-0"
+                            onClick={() => handleRemoveBookmark(blog.id)}
+                            title="Remove bookmark"
+                          >
+                            <BsBookmarkDashFill></BsBookmarkDashFill>
+                          </button>
+                        </>
+                      )}
+                      <a
+                        href={blog.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <button
+                          className="mb-2 mr-2 rounded border border-gray-300 bg-blue-500 p-4 px-4 py-2 font-bold text-white hover:bg-blue-700 md:mb-0"
+                          title="Open blog post in a new tab"
+                        >
+                          <RxOpenInNewWindow></RxOpenInNewWindow>
+                        </button>
+                      </a>
+
+                      <div
+                        className="relative inline-block"
+                        ref={shareButtonContainerRef}
+                      >
+                        <button
+                          className="mb-2 mr-2 rounded border border-gray-300 px-4 py-2 font-bold hover:border-gray-400 md:mb-0"
+                          onClick={() => toggleDropdown(blog.id)}
+                          title="Share"
+                        >
+                          <FiShare2></FiShare2>
+                        </button>
+
+                        {openDropdownId === blog.id && (
+                          <div
+                            ref={dropdownRef}
+                            className="absolute left-0 mt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+                            onClick={(event) => event.stopPropagation()}
+                          >
+                            <div
+                              className="py-1"
+                              role="menu"
+                              aria-orientation="vertical"
+                              aria-labelledby="options-menu"
+                            >
+                              <button
+                                className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                                onClick={() => {
+                                  shareOnTwitter(blog.title, blog.url);
+                                  toggleDropdown(blog.id);
+                                }}
+                              >
+                                <BsTwitter className="mr-2"></BsTwitter>
+                                <span>Share on Twitter</span>
+                              </button>
+                              <button
+                                className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                                onClick={() => {
+                                  shareOnLinkedIn(blog.url);
+                                  toggleDropdown(blog.id);
+                                }}
+                              >
+                                <BsLinkedin className="mr-2"></BsLinkedin>
+                                <span>Share on LinkedIn</span>
+                              </button>
+
+                              <button
+                                className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                                onClick={() => {
+                                  copyURL(blog.url);
+                                  toggleDropdown(blog.id);
+                                }}
+                              >
+                                <FiCopy className="mr-2"></FiCopy>
+                                <span>Copy URL</span>
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
+
+                    <button
+                      className="mt-2 w-full rounded bg-gray-100 py-2 text-gray-700 hover:bg-gray-200"
+                      onClick={() => toggleSummary(blog.id)}
+                    >
+                      {openSummary === blog.id
+                        ? "Hide Summary"
+                        : "Show Summary"}
+                    </button>
                   </div>
 
-                  <button
-                    className="mt-2 w-full rounded bg-gray-100 py-2 text-gray-700 hover:bg-gray-200"
-                    onClick={() => toggleSummary(blog.id)}
+                  <div
+                    className={`mt-2 overflow-y-auto rounded p-2 text-gray-600 transition-all duration-200 ${
+                      openSummary === blog.id
+                        ? "max-h-50 opacity-100"
+                        : "max-h-0 opacity-0"
+                    }`}
                   >
-                    {openSummary === blog.id ? "Hide Summary" : "Show Summary"}
-                  </button>
-                </div>
-
-                <div
-                  className={`mt-2 overflow-y-auto rounded p-2 text-gray-600 transition-all duration-200 ${
-                    openSummary === blog.id
-                      ? "max-h-50 opacity-100"
-                      : "max-h-0 opacity-0"
-                  }`}
-                >
-                  {blog.summary}
-                </div>
-                <div>
-                  <LikeButton blogId={blog.id} userId={user?.id || null} />
+                    {blog.summary}
+                  </div>
+                  <div>
+                    <LikeButton blogId={blog.id} userId={user?.id || null} />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          {selectedFilter !== "Blogs" &&
+            (isLoading ? (
+              <p>Loading videos...</p>
+            ) : (
+              videos.map((video) => (
+                <YoutubeVideoCard
+                  key={video.id}
+                  id={video.id}
+                  title={video.title}
+                  url={video.url}
+                  author={video.author}
+                  createdAt={video.createdAt}
+                  userId={user?.id ?? null} // Use the nullish coalescing operator
+                />
+              ))
+            ))}
         </div>
       )}
       <ToastContainer position={toast.POSITION.TOP_CENTER} />

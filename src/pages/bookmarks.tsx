@@ -3,9 +3,13 @@ import { useUser } from "@clerk/clerk-react";
 import { getUserBookmarks } from "../bookmark";
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
+import YoutubeVideoCard from "../components/YoutubeVideoCard";
 
 const Dashboard = () => {
-  const [bookmarks, setBookmarks] = useState({});
+  const [bookmarks, setBookmarks] = useState({
+    blogBookmarks: [],
+    videoBookmarks: [],
+  });
   const { user } = useUser();
 
   useEffect(() => {
@@ -36,7 +40,7 @@ const Dashboard = () => {
         </ul>
       </div>
       <div className="grid grid-cols-3 gap-4">
-        {Object.values(bookmarks).map((bookmark: any) => (
+        {bookmarks.blogBookmarks.map((bookmark: any) => (
           <div key={bookmark.blogId} className="rounded bg-white p-4 shadow">
             {bookmark.BlogPost && (
               <>
@@ -51,6 +55,22 @@ const Dashboard = () => {
                   Summary: {bookmark.BlogPost.summary}
                 </p>
               </>
+            )}
+          </div>
+        ))}
+        {bookmarks.videoBookmarks.map((videoBookmark: any) => (
+          <div
+            key={videoBookmark.videoId}
+            className="rounded bg-white p-4 shadow"
+          >
+            {videoBookmark.YoutubeVideos && (
+              <YoutubeVideoCard
+                id={videoBookmark.YoutubeVideos.id}
+                url={videoBookmark.YoutubeVideos.url}
+                title={videoBookmark.YoutubeVideos.title}
+                author={videoBookmark.YoutubeVideos.author}
+                createdAt={videoBookmark.YoutubeVideos.createdAt}
+              />
             )}
           </div>
         ))}
