@@ -36,7 +36,10 @@ const YoutubeVideoCard: React.FC<YoutubeVideoCardProps> = ({
   }, [userId]);
 
   return (
-    <div className="mb-6 rounded-lg bg-white p-4 shadow-md">
+    <div
+      className="mb-6 rounded-lg bg-white p-4 shadow-md"
+      style={{ borderLeft: "4px solid red" }}
+    >
       <div className="mb-2">
         <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
         <p className="text-gray-700">

@@ -1,11 +1,5 @@
 import { supabase } from "./supabaseClient";
-
-interface BlogData {
-  id: number;
-  author: string;
-  title: string;
-  releaseDate: string;
-}
+import { BlogData } from "../src/components/BlogPostCard";
 
 export async function getBlogs(): Promise<BlogData[]> {
   const { data, error, status } = await supabase
