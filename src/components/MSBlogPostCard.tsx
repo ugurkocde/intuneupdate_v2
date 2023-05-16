@@ -97,7 +97,7 @@ const MSBlogPostCard: React.FC<BlogPostCardProps> = ({
     <div
       key={blog.id}
       className="rounded-lg bg-white p-4 shadow transition-shadow duration-300 hover:shadow-lg"
-      style={{ borderLeft: "4px solid green" }}
+      style={{ borderLeft: "4px solid orange" }}
     >
       <h2 className="mb-2 text-xl font-bold sm:text-lg">{blog.title}</h2>
 
@@ -116,7 +116,7 @@ const MSBlogPostCard: React.FC<BlogPostCardProps> = ({
           )}
         </div>
 
-        <div className="mb-2 flex flex-col">
+        <div className="mb-2 mt-2 flex flex-col">
           <div className="mb-2 flex flex-wrap items-center">
             {!userBookmarks[blog.id] && (
               <button

@@ -20,6 +20,9 @@ import { FcFaq } from "react-icons/fc";
 import { useSpring, animated } from "@react-spring/web";
 import { BsLinkedin } from "react-icons/bs";
 import { IoNewspaperOutline } from "react-icons/io5";
+import Lottie from "lottie-react";
+import loading_animated from "../assets/loading_animated.json";
+import backtotop from "../assets/backtotop_animated.json";
 
 interface VideoData {
   id: number;
@@ -78,11 +81,11 @@ const Home: NextPage = () => {
   }, []); // <-- Remove `user` dependency from this useEffect
 
   useEffect(() => {
-    const fetchBlogs = async () => {
+    const fetchMSBlogs = async () => {
       const data = await getMSBlogs();
       setMSBlogs(data);
     };
-    fetchBlogs();
+    fetchMSBlogs();
   }, []); // <-- Remove `user` dependency from this useEffect
 
   useEffect(() => {
@@ -230,15 +233,18 @@ const Home: NextPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const blogData = await getBlogs();
+        const [blogData, msBlogData, videoData] = await Promise.all([
+          getBlogs(),
+          getMSBlogs(),
+          getVideos(),
+        ]);
         setBlogs(blogData);
-        const msBlogData = await getMSBlogs();
         setMSBlogs(msBlogData);
-        const videoData = await getVideos();
         setVideos(videoData);
-        setIsLoading(false); // <-- Set `isLoading` to `false` after data is fetched
+        setIsLoading(false); // Set `isLoading` to `false` after data is fetched
       } catch (error) {
         console.error("Error fetching data:", error);
+        setIsLoading(false); // Handle error and set `isLoading` to `false`
       }
     };
 
@@ -364,13 +370,13 @@ const Home: NextPage = () => {
     return (
       <button
         onClick={handleScrollToTop}
-        className="fixed bottom-16 right-8 z-50 rounded bg-blue-500 p-2 text-white"
+        className="fixed bottom-16 right-8 z-50 rounded border border-gray-200 bg-white p-2 shadow shadow-lg"
         style={{
           opacity: isVisible ? 1 : 0,
           visibility: isVisible ? "visible" : "hidden",
         }}
       >
-        &#8593; {/* Up arrow */}
+        <Lottie animationData={backtotop} style={{ width: 60, height: 60 }} />
       </button>
     );
   };
@@ -571,63 +577,79 @@ const Home: NextPage = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 lg:grid-cols-3">
-        {displayedItems.map((item, index) => {
-          if (!item) {
-            return null;
-          }
-
-          const isLastItem = displayedItems.length === index + 1;
-
-          return (
-            <div key={item.id}>
-              {item.itemType === "blog" && (
-                <BlogPostCard
-                  ref={isLastItem ? loader : null}
-                  blog={item}
-                  userBookmarks={userBookmarks}
-                  handleBookmark={handleBookmark}
-                  handleRemoveBookmark={handleRemoveBookmark}
-                />
-              )}
-
-              {item.itemType === "msblog" && (
-                <MSBlogPostCard
-                  ref={isLastItem ? loader : null}
-                  blog={item}
-                  userBookmarks={userBookmarks}
-                  handleBookmark={handleBookmark}
-                  handleRemoveBookmark={handleRemoveBookmark}
-                />
-              )}
-
-              {item.itemType === "video" && (
-                <YoutubeVideoCard
-                  ref={isLastItem ? loader : null}
-                  id={item.id}
-                  title={item.title}
-                  url={item.url}
-                  author={item.author}
-                  createdAt={item.createdAt}
-                  userId={user?.id ?? null}
-                />
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {reachedBottom && hasMoreItems && (
-        <animated.button
-          onClick={loadMoreItems}
-          className="fixed bottom-16 left-0 right-0 z-50 mx-auto rounded bg-blue-500 p-2 text-white"
-          style={fadeAnimation}
+      {isLoading ? (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 9999, // Adjust the z-index as needed
+          }}
         >
-          Load more
-        </animated.button>
-      )}
+          <div style={{ width: "400px", height: "400px" }}>
+            <Lottie animationData={loading_animated} />
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 lg:grid-cols-3">
+            {displayedItems.map((item, index) => {
+              if (!item) {
+                return null;
+              }
 
-      {isLoading && <div>Loading...</div>}
+              const isLastItem = displayedItems.length === index + 1;
+
+              return (
+                <div key={item.id}>
+                  {item.itemType === "blog" && (
+                    <BlogPostCard
+                      ref={isLastItem ? loader : null}
+                      blog={item}
+                      userBookmarks={userBookmarks}
+                      handleBookmark={handleBookmark}
+                      handleRemoveBookmark={handleRemoveBookmark}
+                    />
+                  )}
+
+                  {item.itemType === "msblog" && (
+                    <MSBlogPostCard
+                      ref={isLastItem ? loader : null}
+                      blog={item}
+                      userBookmarks={userBookmarks}
+                      handleBookmark={handleBookmark}
+                      handleRemoveBookmark={handleRemoveBookmark}
+                    />
+                  )}
+
+                  {item.itemType === "video" && (
+                    <YoutubeVideoCard
+                      ref={isLastItem ? loader : null}
+                      id={item.id}
+                      title={item.title}
+                      url={item.url}
+                      author={item.author}
+                      createdAt={item.createdAt}
+                      userId={user?.id ?? null}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {reachedBottom && hasMoreItems && (
+            <animated.button
+              onClick={loadMoreItems}
+              className="fixed bottom-16 left-0 right-0 z-50 mx-auto rounded bg-blue-500 p-2 text-white"
+              style={fadeAnimation}
+            >
+              Load more
+            </animated.button>
+          )}
+        </>
+      )}
 
       <ToastContainer position={toast.POSITION.TOP_CENTER} />
 
