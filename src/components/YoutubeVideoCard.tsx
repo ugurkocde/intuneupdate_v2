@@ -1,9 +1,9 @@
-// YoutubeVideoCard.tsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import VideoLikeButton from "../pages/VideoLikeButton";
 import VideoBookmarkButton from "../components/VideoBookmarkButton";
+import { getUserVideoBookmarks } from "../videoBookmarks";
 import { ImYoutube } from "react-icons/im";
-import { getUserVideoBookmarks } from "../videoBookmarks"; // Import getUserVideoBookmarks
+import { ImPlay2 } from "react-icons/im";
 
 interface YoutubeVideoCardProps {
   id: number;
@@ -23,17 +23,16 @@ const YoutubeVideoCard: React.FC<YoutubeVideoCardProps> = ({
   userId,
 }) => {
   const videoId = url.split("watch?v=")[1];
+  const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+  const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+
   const [userVideoBookmarks, setUserVideoBookmarks] = useState({});
 
-  useEffect(() => {
-    const fetchVideoBookmarks = async () => {
-      if (userId) {
-        const data = await getUserVideoBookmarks(userId);
-        setUserVideoBookmarks(data);
-      }
-    };
-    fetchVideoBookmarks();
-  }, [userId]);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const playVideo = () => {
+    setIsPlaying(true);
+  };
 
   return (
     <div
@@ -47,15 +46,56 @@ const YoutubeVideoCard: React.FC<YoutubeVideoCardProps> = ({
           {new Date(createdAt).toLocaleDateString()}
         </p>
       </div>
-      <a href={url} target="_blank" rel="noopener noreferrer">
-        <ImYoutube className="text-4xl text-red-500" />
-      </a>
+      <div
+        style={{
+          position: "relative",
+          paddingBottom: "56.25%",
+          height: 0,
+          overflow: "hidden",
+          background: `url(${thumbnailUrl}) no-repeat`,
+          backgroundSize: "cover",
+          cursor: "pointer",
+        }}
+        onClick={playVideo}
+      >
+        {!isPlaying && (
+          <ImPlay2
+            className="absolute text-5xl text-white"
+            style={{
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          />
+        )}
+        {isPlaying && (
+          <iframe
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+            }}
+            src={`${embedUrl}?autoplay=1`}
+            title={title}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        )}
+      </div>
       <VideoLikeButton videoId={id} userId={userId} />
       <VideoBookmarkButton
         videoId={id}
         userId={userId}
         userBookmarks={userVideoBookmarks}
       />
+      <div>
+        <a href={url} target="_blank" rel="noopener noreferrer">
+          <ImYoutube className="text-4xl text-red-500" />
+        </a>
+      </div>
     </div>
   );
 };

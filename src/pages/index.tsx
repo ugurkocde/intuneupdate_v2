@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo, useRef } from "react";
 import type { NextPage } from "next";
 import { getBlogs } from "../getBlogs";
 import { getVideos } from "../getVideos";
+import { getMSBlogs } from "../getMSBlogs";
 import { useUser } from "@clerk/clerk-react";
 import { getUserBookmarks, addBookmark, removeBookmark } from "../bookmark";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
@@ -10,11 +11,15 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import YoutubeVideoCard from "../components/YoutubeVideoCard";
 import BlogPostCard, { BlogData } from "../components/BlogPostCard";
+import MSBlogPostCard from "~/components/MSBlogPostCard";
 import { MdPrivacyTip } from "react-icons/md";
 import { GrCompliance } from "react-icons/gr";
 import { HiOutlineSelector } from "react-icons/hi";
-import { BsTwitter, BsBookmarkPlusFill } from "react-icons/bs";
+import { BsTwitter, BsBookmarkPlusFill, BsTools } from "react-icons/bs";
+import { FcFaq } from "react-icons/fc";
 import { useSpring, animated } from "@react-spring/web";
+import { BsLinkedin } from "react-icons/bs";
+import { IoNewspaperOutline } from "react-icons/io5";
 
 interface VideoData {
   id: number;
@@ -54,6 +59,7 @@ const Home: NextPage = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [blogs, setBlogs] = useState<BlogData[]>([]);
   const { user, isSignedIn } = useUser();
+  const [msBlogs, setMSBlogs] = useState<BlogData[]>([]);
 
   useEffect(() => {
     const fetchVideos = async () => {
@@ -67,6 +73,14 @@ const Home: NextPage = () => {
     const fetchBlogs = async () => {
       const data = await getBlogs();
       setBlogs(data);
+    };
+    fetchBlogs();
+  }, []); // <-- Remove `user` dependency from this useEffect
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      const data = await getMSBlogs();
+      setMSBlogs(data);
     };
     fetchBlogs();
   }, []); // <-- Remove `user` dependency from this useEffect
@@ -183,12 +197,21 @@ const Home: NextPage = () => {
       date: new Date(video.createdAt),
     }));
 
-    const allItems = [...sortedBlogs, ...sortedVideos];
+    const msBlogPosts = msBlogs.map((msBlog) => ({
+      ...msBlog,
+      itemType: "msblog",
+    }));
+
+    const allItems = [...sortedBlogs, ...sortedVideos, ...msBlogPosts];
     allItems.sort((a, b) => b.date.valueOf() - a.date.valueOf());
 
-    // Interleave the sorted blog posts and videos
+    // Interleave the sorted blog posts, videos, and msBlogPosts
     const interleavedItems = [];
-    const maxLength = Math.max(sortedBlogs.length, sortedVideos.length);
+    const maxLength = Math.max(
+      sortedBlogs.length,
+      sortedVideos.length,
+      msBlogPosts.length
+    );
     for (let i = 0; i < maxLength; i++) {
       if (sortedBlogs[i]) {
         interleavedItems.push(sortedBlogs[i]);
@@ -196,16 +219,21 @@ const Home: NextPage = () => {
       if (sortedVideos[i]) {
         interleavedItems.push(sortedVideos[i]);
       }
+      if (msBlogPosts[i]) {
+        interleavedItems.push(msBlogPosts[i]);
+      }
     }
 
     return interleavedItems;
-  }, [filteredBlogs, videos]);
+  }, [filteredBlogs, videos, msBlogs]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const blogData = await getBlogs();
         setBlogs(blogData);
+        const msBlogData = await getMSBlogs();
+        setMSBlogs(msBlogData);
         const videoData = await getVideos();
         setVideos(videoData);
         setIsLoading(false); // <-- Set `isLoading` to `false` after data is fetched
@@ -314,6 +342,39 @@ const Home: NextPage = () => {
     config: { duration: 500 },
   });
 
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const BackToTopButton = () => {
+    const [isVisible, setIsVisible] = useState(false);
+
+    const handleScroll = () => {
+      const scrollPosition = window.pageYOffset;
+      const showThreshold = 200; // Adjust this value as needed
+
+      setIsVisible(scrollPosition > showThreshold);
+    };
+
+    useEffect(() => {
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    return (
+      <button
+        onClick={handleScrollToTop}
+        className="fixed bottom-16 right-8 z-50 rounded bg-blue-500 p-2 text-white"
+        style={{
+          opacity: isVisible ? 1 : 0,
+          visibility: isVisible ? "visible" : "hidden",
+        }}
+      >
+        &#8593; {/* Up arrow */}
+      </button>
+    );
+  };
+
   return (
     <div className="container mx-auto">
       <div
@@ -326,15 +387,37 @@ const Home: NextPage = () => {
             <div className="flex items-center">
               <div>
                 <Link href="/faq">
-                  <button className="ml-5 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
-                    FAQ
+                  <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
+                    <FcFaq />
                   </button>
                 </Link>
               </div>
               <div>
                 <Link href="/tools">
-                  <button className="ml-5 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
-                    Tools
+                  <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
+                    <BsTools />
+                  </button>
+                </Link>
+              </div>
+              <div>
+                <Link
+                  href="https://www.linkedin.com/groups/8761296/"
+                  target="_blank"
+                  title="Modern Endpoint Management LinkedIn Group"
+                >
+                  <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
+                    <BsLinkedin />
+                  </button>
+                </Link>
+              </div>
+              <div>
+                <Link
+                  href="https://andrewstaylor.com/"
+                  target="_blank"
+                  title="Newsletter"
+                >
+                  <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
+                    <IoNewspaperOutline />
                   </button>
                 </Link>
               </div>
@@ -448,7 +531,7 @@ const Home: NextPage = () => {
                   <button
                     className="w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                     onClick={() => {
-                      setSelectedFilter("Blogs");
+                      setSelectedFilter("Community Blogs");
                       setDropdownOpen(false);
                     }}
                   >
@@ -457,7 +540,7 @@ const Home: NextPage = () => {
                   <button
                     className="w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                     onClick={() => {
-                      setSelectedFilter("YouTube");
+                      setSelectedFilter("Microsoft Blogs");
                       setDropdownOpen(false);
                     }}
                   >
@@ -466,7 +549,7 @@ const Home: NextPage = () => {
                   <button
                     className="w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                     onClick={() => {
-                      setSelectedFilter("YouTube");
+                      setSelectedFilter("GitHub Updates");
                       setDropdownOpen(false);
                     }}
                   >
@@ -495,31 +578,42 @@ const Home: NextPage = () => {
           }
 
           const isLastItem = displayedItems.length === index + 1;
-          if (item.itemType === "blog") {
-            return (
-              <BlogPostCard
-                ref={isLastItem ? loader : null}
-                key={item.id}
-                blog={item}
-                userBookmarks={userBookmarks}
-                handleBookmark={handleBookmark}
-                handleRemoveBookmark={handleRemoveBookmark}
-              />
-            );
-          } else {
-            return (
-              <YoutubeVideoCard
-                ref={isLastItem ? loader : null}
-                key={item.id}
-                id={item.id}
-                title={item.title}
-                url={item.url}
-                author={item.author}
-                createdAt={item.createdAt}
-                userId={user?.id ?? null}
-              />
-            );
-          }
+
+          return (
+            <div key={item.id}>
+              {item.itemType === "blog" && (
+                <BlogPostCard
+                  ref={isLastItem ? loader : null}
+                  blog={item}
+                  userBookmarks={userBookmarks}
+                  handleBookmark={handleBookmark}
+                  handleRemoveBookmark={handleRemoveBookmark}
+                />
+              )}
+
+              {item.itemType === "msblog" && (
+                <MSBlogPostCard
+                  ref={isLastItem ? loader : null}
+                  blog={item}
+                  userBookmarks={userBookmarks}
+                  handleBookmark={handleBookmark}
+                  handleRemoveBookmark={handleRemoveBookmark}
+                />
+              )}
+
+              {item.itemType === "video" && (
+                <YoutubeVideoCard
+                  ref={isLastItem ? loader : null}
+                  id={item.id}
+                  title={item.title}
+                  url={item.url}
+                  author={item.author}
+                  createdAt={item.createdAt}
+                  userId={user?.id ?? null}
+                />
+              )}
+            </div>
+          );
         })}
       </div>
 
@@ -537,6 +631,8 @@ const Home: NextPage = () => {
 
       <ToastContainer position={toast.POSITION.TOP_CENTER} />
 
+      <BackToTopButton />
+
       <footer className="fixed-footer mt-12 border-t border-gray-200 bg-white py-4 shadow shadow-lg">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between space-x-4">
@@ -551,7 +647,7 @@ const Home: NextPage = () => {
               </a>
             </div>
             <div className="sm:text-s text-center text-sm font-semibold md:w-1/2 md:text-base">
-              <a>Latest Intune News</a>
+              <a></a>
             </div>
 
             <div className="flex items-center space-x-4">

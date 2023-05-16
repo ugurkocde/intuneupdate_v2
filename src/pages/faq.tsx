@@ -109,7 +109,7 @@ const FAQ: React.FC = () => {
               </a>
             </div>
             <div className="sm:text-s text-center text-sm font-semibold md:w-1/2 md:text-base">
-              <a>Latest Intune News</a>
+              <a></a>
             </div>
 
             <div className="flex items-center space-x-4">
