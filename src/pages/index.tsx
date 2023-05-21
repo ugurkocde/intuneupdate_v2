@@ -3,6 +3,8 @@ import type { NextPage } from "next";
 import { getBlogs } from "../getBlogs";
 import { getVideos } from "../getVideos";
 import { getMSBlogs } from "../getMSBlogs";
+import { getIntuneMSBlogs } from "~/getIntuneMSBlogs";
+import { getWindowsBlogs } from "~/getWindowsBlogs";
 import { useUser } from "@clerk/clerk-react";
 import { getUserBookmarks, addBookmark, removeBookmark } from "../bookmark";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
@@ -12,6 +14,8 @@ import "react-toastify/dist/ReactToastify.css";
 import YoutubeVideoCard from "../components/YoutubeVideoCard";
 import BlogPostCard, { BlogData } from "../components/BlogPostCard";
 import MSBlogPostCard from "~/components/MSBlogPostCard";
+import IntuneMSBlogPostCard from "~/components/IntuneMSBlogPostCard";
+import WindowsBlogPostCard from "~/components/WindowsBlogPostCard";
 import { MdPrivacyTip } from "react-icons/md";
 import { GrCompliance } from "react-icons/gr";
 import { HiOutlineSelector } from "react-icons/hi";
@@ -23,6 +27,8 @@ import { IoNewspaperOutline } from "react-icons/io5";
 import Lottie from "lottie-react";
 import loading_animated from "../assets/loading_animated.json";
 import backtotop from "../assets/backtotop_animated.json";
+import { get } from "http";
+import { set } from "zod";
 
 interface VideoData {
   id: number;
@@ -63,6 +69,8 @@ const Home: NextPage = () => {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
   const { user, isSignedIn } = useUser();
   const [msBlogs, setMSBlogs] = useState<BlogData[]>([]);
+  const [IntunemsBlogs, setIntuneMSBlogs] = useState<BlogData[]>([]);
+  const [WindowsBlogs, setWindowsBlogs] = useState<BlogData[]>([]);
 
   useEffect(() => {
     const fetchVideos = async () => {
@@ -78,7 +86,7 @@ const Home: NextPage = () => {
       setBlogs(data);
     };
     fetchBlogs();
-  }, []); // <-- Remove `user` dependency from this useEffect
+  }, []);
 
   useEffect(() => {
     const fetchMSBlogs = async () => {
@@ -86,7 +94,23 @@ const Home: NextPage = () => {
       setMSBlogs(data);
     };
     fetchMSBlogs();
-  }, []); // <-- Remove `user` dependency from this useEffect
+  }, []);
+
+  useEffect(() => {
+    const fetchWindowsBlogs = async () => {
+      const data = await getWindowsBlogs();
+      setWindowsBlogs(data);
+    };
+    fetchWindowsBlogs();
+  }, []);
+
+  useEffect(() => {
+    const fetchIntuneMSBlogs = async () => {
+      const data = await getIntuneMSBlogs();
+      setIntuneMSBlogs(data);
+    };
+    fetchIntuneMSBlogs();
+  }, []);
 
   useEffect(() => {
     const fetchUserBookmarks = async () => {
@@ -205,15 +229,32 @@ const Home: NextPage = () => {
       itemType: "msblog",
     }));
 
-    const allItems = [...sortedBlogs, ...sortedVideos, ...msBlogPosts];
+    const IntunemsBlogPosts = IntunemsBlogs.map((IntunemsBlog) => ({
+      ...IntunemsBlog,
+      itemType: "Intunemsblog",
+    }));
+
+    const WindowsBlogPosts = WindowsBlogs.map((WindowsBlog) => ({
+      ...WindowsBlog,
+      itemType: "Windowsblog",
+    }));
+
+    const allItems = [
+      ...sortedBlogs,
+      ...sortedVideos,
+      ...msBlogPosts,
+      ...IntunemsBlogPosts,
+      ...WindowsBlogPosts,
+    ];
     allItems.sort((a, b) => b.date.valueOf() - a.date.valueOf());
 
-    // Interleave the sorted blog posts, videos, and msBlogPosts
     const interleavedItems = [];
     const maxLength = Math.max(
       sortedBlogs.length,
       sortedVideos.length,
-      msBlogPosts.length
+      msBlogPosts.length,
+      IntunemsBlogPosts.length,
+      WindowsBlogPosts.length
     );
     for (let i = 0; i < maxLength; i++) {
       if (sortedBlogs[i]) {
@@ -225,21 +266,37 @@ const Home: NextPage = () => {
       if (msBlogPosts[i]) {
         interleavedItems.push(msBlogPosts[i]);
       }
+      if (IntunemsBlogPosts[i]) {
+        interleavedItems.push(IntunemsBlogPosts[i]);
+      }
+      if (WindowsBlogPosts[i]) {
+        interleavedItems.push(WindowsBlogPosts[i]);
+      }
     }
 
     return interleavedItems;
-  }, [filteredBlogs, videos, msBlogs]);
+  }, [filteredBlogs, videos, msBlogs, IntunemsBlogs, WindowsBlogs]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [blogData, msBlogData, videoData] = await Promise.all([
+        const [
+          blogData,
+          msBlogData,
+          videoData,
+          IntunemsBlogPosts,
+          WindowsBlogPosts,
+        ] = await Promise.all([
           getBlogs(),
           getMSBlogs(),
           getVideos(),
+          getIntuneMSBlogs(),
+          getWindowsBlogs(),
         ]);
         setBlogs(blogData);
         setMSBlogs(msBlogData);
+        setIntuneMSBlogs(IntunemsBlogPosts);
+        setWindowsBlogs(WindowsBlogPosts);
         setVideos(videoData);
         setIsLoading(false); // Set `isLoading` to `false` after data is fetched
       } catch (error) {
@@ -615,6 +672,26 @@ const Home: NextPage = () => {
 
                   {item.itemType === "msblog" && (
                     <MSBlogPostCard
+                      ref={isLastItem ? loader : null}
+                      blog={item}
+                      userBookmarks={userBookmarks}
+                      handleBookmark={handleBookmark}
+                      handleRemoveBookmark={handleRemoveBookmark}
+                    />
+                  )}
+
+                  {item.itemType === "Intunemsblog" && (
+                    <IntuneMSBlogPostCard
+                      ref={isLastItem ? loader : null}
+                      blog={item}
+                      userBookmarks={userBookmarks}
+                      handleBookmark={handleBookmark}
+                      handleRemoveBookmark={handleRemoveBookmark}
+                    />
+                  )}
+
+                  {item.itemType === "Windowsblog" && (
+                    <WindowsBlogPostCard
                       ref={isLastItem ? loader : null}
                       blog={item}
                       userBookmarks={userBookmarks}

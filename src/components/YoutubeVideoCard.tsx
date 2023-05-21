@@ -36,7 +36,7 @@ const YoutubeVideoCard: React.FC<YoutubeVideoCardProps> = ({
 
   return (
     <div
-      className="mb-6 rounded-lg bg-white p-4 shadow-md"
+      className="mb-6 rounded-lg bg-white p-4 shadow-md transition-shadow duration-300 hover:shadow-lg"
       style={{ borderLeft: "4px solid red" }}
     >
       <div className="mb-2">

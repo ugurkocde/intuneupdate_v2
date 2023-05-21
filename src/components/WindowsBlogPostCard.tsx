@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import LikeButton from "../pages/LikeButton";
 import { useUser } from "@clerk/clerk-react";
 
-export interface MSBlogPostCard {
+export interface WindowsBlogPostCard {
   id: number;
   title: string;
   author: string;
@@ -24,13 +24,13 @@ export interface MSBlogPostCard {
 }
 
 interface BlogPostCardProps {
-  blog: MSBlogPostCard;
+  blog: WindowsBlogPostCard;
   userBookmarks: Record<number, boolean>;
   handleBookmark: (blogId: number) => void;
   handleRemoveBookmark: (blogId: number) => void;
 }
 
-const MSBlogPostCard: React.FC<BlogPostCardProps> = ({
+const WindowsBlogPostCard: React.FC<BlogPostCardProps> = ({
   blog,
   userBookmarks,
   handleBookmark,
@@ -219,4 +219,4 @@ const MSBlogPostCard: React.FC<BlogPostCardProps> = ({
   );
 };
 
-export default MSBlogPostCard;
+export default WindowsBlogPostCard;
