@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import LikeButton from "../pages/LikeButton";
 import { useUser } from "@clerk/clerk-react";
 
-export interface IntuneMSBlogPostCard {
+export interface IntuneMSBlogPostData {
   id: number;
   title: string;
   author: string;
@@ -19,23 +19,21 @@ export interface IntuneMSBlogPostCard {
   createdAt: string;
   summary?: string;
   url: string;
-  date: string;
+  date: Date;
   pictureUrl?: string;
 }
 
 interface BlogPostCardProps {
-  blog: IntuneMSBlogPostCard;
+  blog: IntuneMSBlogPostData;
   userBookmarks: Record<number, boolean>;
   handleBookmark: (blogId: number) => void;
   handleRemoveBookmark: (blogId: number) => void;
 }
 
-const IntuneMSBlogPostCard: React.FC<BlogPostCardProps> = ({
-  blog,
-  userBookmarks,
-  handleBookmark,
-  handleRemoveBookmark,
-}) => {
+const IntuneMSBlogPostCard = React.forwardRef<
+  HTMLDivElement,
+  BlogPostCardProps
+>(({ blog, userBookmarks, handleBookmark, handleRemoveBookmark }, ref) => {
   const shareButtonContainerRef = useRef<HTMLDivElement>(null);
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -217,6 +215,6 @@ const IntuneMSBlogPostCard: React.FC<BlogPostCardProps> = ({
       </div>
     </div>
   );
-};
+});
 
 export default IntuneMSBlogPostCard;

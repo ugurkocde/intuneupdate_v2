@@ -1,7 +1,7 @@
 import { supabase } from "./supabaseClient";
-import { WindowsBlogPostCard } from "./components/WindowsBlogPostCard";
+import { WindowsBlogPostData } from "./components/WindowsBlogPostCard";
 
-export async function getWindowsBlogs(): Promise<WindowsBlogPostCard[]> {
+export async function getWindowsBlogs(): Promise<WindowsBlogPostData[]> {
   const { data, error, status } = await supabase
     .from("WindowsBlogPost")
     .select("*")
@@ -12,5 +12,5 @@ export async function getWindowsBlogs(): Promise<WindowsBlogPostCard[]> {
     throw error;
   }
 
-  return data as WindowsBlogPostCard[];
+  return data as WindowsBlogPostData[];
 }

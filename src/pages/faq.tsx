@@ -89,9 +89,9 @@ const FAQ: React.FC = () => {
             className="bg-white p-4 shadow"
           >
             <h2 className="mb-2 text-xl font-bold">
-              {faqData[index].question}
+              {faqData[index]?.question}
             </h2>
-            <p>{faqData[index].answer}</p>
+            <p>{faqData[index]?.answer}</p>
           </animated.div>
         ))}
       </div>

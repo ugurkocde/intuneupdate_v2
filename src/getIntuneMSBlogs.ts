@@ -1,7 +1,7 @@
 import { supabase } from "./supabaseClient";
-import { IntuneMSBlogPostCard } from "./components/IntuneMSBlogPostCard";
+import { IntuneMSBlogPostData } from "./components/IntuneMSBlogPostCard";
 
-export async function getIntuneMSBlogs(): Promise<IntuneMSBlogPostCard[]> {
+export async function getIntuneMSBlogs(): Promise<IntuneMSBlogPostData[]> {
   const { data, error, status } = await supabase
     .from("IntuneMSBlogPost")
     .select("*")
@@ -12,5 +12,5 @@ export async function getIntuneMSBlogs(): Promise<IntuneMSBlogPostCard[]> {
     throw error;
   }
 
-  return data as IntuneMSBlogPostCard[];
+  return data as IntuneMSBlogPostData[];
 }

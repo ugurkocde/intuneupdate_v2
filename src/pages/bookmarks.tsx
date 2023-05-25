@@ -5,8 +5,13 @@ import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
 import YoutubeVideoCard from "../components/YoutubeVideoCard";
 
+interface BookmarkData {
+  blogBookmarks: any[];
+  videoBookmarks: any[];
+}
+
 const Dashboard = () => {
-  const [bookmarks, setBookmarks] = useState({
+  const [bookmarks, setBookmarks] = useState<BookmarkData>({
     blogBookmarks: [],
     videoBookmarks: [],
   });
@@ -16,7 +21,9 @@ const Dashboard = () => {
     const fetchBookmarks = async () => {
       if (user) {
         const data = await getUserBookmarks(user.id);
-        setBookmarks(data);
+        if (data) {
+          setBookmarks(data);
+        }
       }
     };
     fetchBookmarks();
@@ -74,6 +81,7 @@ const Dashboard = () => {
                 title={videoBookmark.YoutubeVideos.title}
                 author={videoBookmark.YoutubeVideos.author}
                 createdAt={videoBookmark.YoutubeVideos.createdAt}
+                userId={null}
               />
             )}
           </div>

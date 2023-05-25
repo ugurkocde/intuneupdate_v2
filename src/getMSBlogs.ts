@@ -1,7 +1,7 @@
 import { supabase } from "./supabaseClient";
-import { MSBlogPostCard } from "../src/components/MSBlogPostCard";
+import { MSBlogPostData } from "./components/MSBlogPostCard";
 
-export async function getMSBlogs(): Promise<MSBlogPostCard[]> {
+export async function getMSBlogs(): Promise<MSBlogPostData[]> {
   const { data, error, status } = await supabase
     .from("MSBlogPost")
     .select("*")
@@ -12,5 +12,5 @@ export async function getMSBlogs(): Promise<MSBlogPostCard[]> {
     throw error;
   }
 
-  return data as MSBlogPostCard[];
+  return data as MSBlogPostData[];
 }

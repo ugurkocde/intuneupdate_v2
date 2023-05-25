@@ -14,14 +14,10 @@ interface YoutubeVideoCardProps {
   userId: string | null;
 }
 
-const YoutubeVideoCard: React.FC<YoutubeVideoCardProps> = ({
-  id,
-  title,
-  url,
-  author,
-  createdAt,
-  userId,
-}) => {
+const YoutubeVideoCard = React.forwardRef<
+  HTMLDivElement,
+  YoutubeVideoCardProps
+>(({ id, title, url, author, createdAt, userId }, ref) => {
   const videoId = url.split("watch?v=")[1];
   const embedUrl = `https://www.youtube.com/embed/${videoId}`;
   const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
@@ -98,6 +94,5 @@ const YoutubeVideoCard: React.FC<YoutubeVideoCardProps> = ({
       </div>
     </div>
   );
-};
-
+});
 export default YoutubeVideoCard;
