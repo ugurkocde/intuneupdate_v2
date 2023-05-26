@@ -273,7 +273,7 @@ function AllCards() {
         </div>
       </div>
 
-      <div className="ml-5 mr-5 grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="ml-2 mr-2 grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 lg:grid-cols-3">
         {" "}
         {filteredItemsState.map((item, index) => {
           if (!item) {
