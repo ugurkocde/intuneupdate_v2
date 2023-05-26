@@ -255,10 +255,9 @@ function AllCards() {
   }, [combinedItems, searchTerm, selectedAuthor]);
 
   return (
-    <div className="ml-5 mr-5 grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 lg:grid-cols-3">
-      <div className="flex justify-center">
+    <div className="ml-5 mr-5 pb-20">
+      <div className="mb-4 flex justify-center">
         <SearchBox searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-        <div className="relative inline-block"></div>
         <div className="relative inline-block">
           <DropdownMenu
             options={[
@@ -274,69 +273,74 @@ function AllCards() {
         </div>
       </div>
 
-      {filteredItemsState.map((item, index) => {
-        if (!item) {
-          return null;
-        }
-        return (
-          <div key={item.id}>
-            {item.itemType === "blog" && (
-              <BlogPostCard
-                blog={item}
-                userBookmarks={userBookmarks}
-                handleBookmark={handleAddBookmark}
-                handleRemoveBookmark={handleRemoveBookmarkLocal}
-              />
-            )}
+      <div className="ml-5 mr-5 grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 lg:grid-cols-3">
+        {" "}
+        {filteredItemsState.map((item, index) => {
+          if (!item) {
+            return null;
+          }
+          return (
+            <div key={item.id}>
+              {item.itemType === "blog" && (
+                <BlogPostCard
+                  blog={item}
+                  userBookmarks={userBookmarks}
+                  handleBookmark={handleAddBookmark}
+                  handleRemoveBookmark={handleRemoveBookmarkLocal}
+                />
+              )}
 
-            {item.itemType === "msblog" && (
-              <MSBlogPostCard
-                blog={item}
-                userBookmarks={userBookmarks}
-                handleBookmark={handleAddBookmark}
-                handleRemoveBookmark={handleRemoveBookmarkLocal}
-              />
-            )}
+              {item.itemType === "msblog" && (
+                <MSBlogPostCard
+                  blog={item}
+                  userBookmarks={userBookmarks}
+                  handleBookmark={handleAddBookmark}
+                  handleRemoveBookmark={handleRemoveBookmarkLocal}
+                />
+              )}
 
-            {item.itemType === "Intunemsblog" && (
-              <IntuneMSBlogPostCard
-                blog={item}
-                userBookmarks={userBookmarks}
-                handleBookmark={handleAddBookmark}
-                handleRemoveBookmark={handleRemoveBookmarkLocal}
-              />
-            )}
+              {item.itemType === "Intunemsblog" && (
+                <IntuneMSBlogPostCard
+                  blog={item}
+                  userBookmarks={userBookmarks}
+                  handleBookmark={handleAddBookmark}
+                  handleRemoveBookmark={handleRemoveBookmarkLocal}
+                />
+              )}
 
-            {item.itemType === "Windowsblog" && (
-              <WindowsBlogPostCard
-                blog={item}
-                userBookmarks={userBookmarks}
-                handleBookmark={handleAddBookmark}
-                handleRemoveBookmark={handleRemoveBookmarkLocal}
-              />
-            )}
+              {item.itemType === "Windowsblog" && (
+                <WindowsBlogPostCard
+                  blog={item}
+                  userBookmarks={userBookmarks}
+                  handleBookmark={handleAddBookmark}
+                  handleRemoveBookmark={handleRemoveBookmarkLocal}
+                />
+              )}
 
-            {item.itemType === "video" && (
-              <YoutubeVideoCard
-                id={item.id}
-                title={item.title}
-                url={item.url}
-                author={item.author}
-                createdAt={item.createdAt}
-                userId={user?.id ?? null}
-              />
-            )}
-            {isScrolling && (
-              <div
-                className="fixed bottom-10 right-0 z-50 mb-4 mr-4 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700"
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              >
-                <FaArrowUp />
-              </div>
-            )}
-          </div>
-        );
-      })}
+              {item.itemType === "video" && (
+                <YoutubeVideoCard
+                  id={item.id}
+                  title={item.title}
+                  url={item.url}
+                  author={item.author}
+                  createdAt={item.createdAt}
+                  userId={user?.id ?? null}
+                />
+              )}
+              {isScrolling && (
+                <div
+                  className="fixed bottom-10 right-0 z-50 mb-4 mr-4 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700"
+                  onClick={() =>
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                  }
+                >
+                  <FaArrowUp />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
