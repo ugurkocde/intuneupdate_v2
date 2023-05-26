@@ -6,6 +6,7 @@ import { useSpring, animated } from "@react-spring/web";
 import { BsLinkedin } from "react-icons/bs";
 import { FaQuestionCircle } from "react-icons/fa";
 import { IoNewspaperOutline } from "react-icons/io5";
+import { BiLogIn, BiLogOut } from "react-icons/bi";
 import Lottie from "lottie-react";
 import burgermenu from "../assets/burger-menu_animated.json";
 
@@ -65,7 +66,7 @@ function Header() {
     >
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
-          <div className="relative ">
+          <div className="relative ml-2" title="Menu">
             <Lottie
               lottieRef={lottieRef}
               onClick={handleBurgerClick}
@@ -139,19 +140,17 @@ function Header() {
             </animated.div>
           </div>
 
-          <div className="w-1/2 text-center">
-            <h1 className="mb-4 mt-2 text-3xl font-bold sm:text-5xl">
+          <div className="w-full text-center">
+            <h1 className="mb-4 mt-2 text-4xl font-bold sm:text-5xl">
               Intune Update
             </h1>
           </div>
-          <div className="w-1/4">
+          <div className="relative mr-5">
             <ul className="flex items-center justify-end">
               <SignedOut>
                 <li>
-                  <Link href="/sign-in">
-                    <button className="mr-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
-                      Sign in
-                    </button>
+                  <Link href="/sign-in" title="Login">
+                    <BiLogIn className="text-4xl" />
                   </Link>
                 </li>
               </SignedOut>

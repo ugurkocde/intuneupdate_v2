@@ -30,6 +30,7 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-spring": "^9.7.1",
     "react-toastify": "^9.1.2",
+    "react-tooltip": "^5.13.1",
     "supabase": "^1.50.13",
     "superjson": "1.12.2",
     "zod": "^3.21.4"
