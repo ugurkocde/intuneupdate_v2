@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import type { NextPage } from "next";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import Link from "next/link";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MdPrivacyTip } from "react-icons/md";
@@ -18,104 +17,21 @@ import backtotop from "../assets/backtotop_animated.json";
 import SearchBox from "../components/SearchBox";
 import DropdownMenu from "../components/DropdownShare";
 import AllCards from "~/components/AllCards";
+import Header from "~/components/Header";
+import Head from "next/head";
 
 const Home: NextPage = () => {
-  const [hasShadow, setHasShadow] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAuthor, setSelectedAuthor] = useState<string | null>(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [uniqueAuthors, setUniqueAuthors] = useState<string[]>([]);
 
   return (
     <div className="container mx-auto">
-      <div
-        className={`sticky top-0 z-50 bg-white ${
-          hasShadow ? "border-b border-gray-200 shadow shadow-lg " : ""
-        }`}
-      >
-        <div className="container mx-auto">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div>
-                <Link href="/faq">
-                  <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
-                    <FcFaq />
-                  </button>
-                </Link>
-              </div>
-              <div>
-                <Link href="/tools">
-                  <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
-                    <BsTools />
-                  </button>
-                </Link>
-              </div>
-              <div>
-                <Link
-                  href="https://www.linkedin.com/groups/8761296/"
-                  target="_blank"
-                  title="Modern Endpoint Management LinkedIn Group"
-                >
-                  <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
-                    <BsLinkedin />
-                  </button>
-                </Link>
-              </div>
-              <div>
-                <Link
-                  href="https://andrewstaylor.com/"
-                  target="_blank"
-                  title="Newsletter"
-                >
-                  <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
-                    <IoNewspaperOutline />
-                  </button>
-                </Link>
-              </div>
-            </div>
-            <div className="w-1/2 text-center">
-              <h1 className="mb-4 mt-2 text-3xl font-bold sm:text-5xl">
-                Intune Update
-              </h1>
-            </div>
-            <div className="w-1/4">
-              <ul className="flex items-center justify-end">
-                <SignedOut>
-                  <li>
-                    <Link href="/sign-in">
-                      <button className="mr-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
-                        Sign in
-                      </button>
-                    </Link>
-                  </li>
-                </SignedOut>
-                <SignedIn>
-                  <li className="mr-4 hidden sm:block">
-                    <Link href="/bookmarks">
-                      <button className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
-                        My Bookmarks
-                      </button>
-                    </Link>
-                  </li>
-                  <li className="mr-4 block sm:hidden">
-                    <Link href="/bookmarks">
-                      <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
-                        <BsBookmarkPlusFill />
-                      </button>
-                    </Link>
-                  </li>
-                  <li className="mr-4">
-                    <UserButton />
-                  </li>
-                </SignedIn>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="mb-4">
+        <Header />
+
         <div className="flex justify-center">
           <SearchBox searchTerm={searchTerm} onSearchChange={setSearchTerm} />
           <div className="relative inline-block"></div>
