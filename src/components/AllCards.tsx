@@ -16,6 +16,11 @@ import WindowsBlogPostCard, {
   WindowsBlogPostData,
 } from "~/components/WindowsBlogPostCard";
 import { ToastContainer, toast } from "react-toastify";
+import DropdownMenu from "../components/DropdownShare";
+import SearchBox from "../components/SearchBox";
+import Lottie from "lottie-react";
+import backtotop from "../assets/backtotop_animated.json";
+//import loading_animated from "../assets/loading_animated.json";
 
 interface VideoData {
   id: number;
@@ -35,14 +40,6 @@ interface Item {
   createdAt: string;
 }
 
-interface AllCardsProps {
-  filteredItems: Item[];
-  userBookmarks: Record<number, boolean>;
-  handleBookmark: (id: number) => void;
-  handleRemoveBookmark: (id: number) => void;
-  setUniqueAuthors: (authors: string[]) => void;
-}
-
 function AllCards() {
   const { user, isSignedIn } = useUser();
   const [searchTerm, setSearchTerm] = useState("");
@@ -57,6 +54,22 @@ function AllCards() {
     []
   );
   const [WindowsBlogs, setWindowsBlogs] = useState<WindowsBlogPostData[]>([]);
+
+  const [selectedFilter, setSelectedFilter] = useState("All");
+  const [isScrolling, setIsScrolling] = useState(false);
+
+  useEffect(() => {
+    const checkScrollTop = () => {
+      if (!isScrolling && window.pageYOffset > 400) {
+        setIsScrolling(true);
+      } else if (isScrolling && window.pageYOffset <= 400) {
+        setIsScrolling(false);
+      }
+    };
+
+    window.addEventListener("scroll", checkScrollTop);
+    return () => window.removeEventListener("scroll", checkScrollTop);
+  }, [isScrolling]);
 
   useEffect(() => {
     const fetchVideos = async () => {
@@ -244,6 +257,24 @@ function AllCards() {
 
   return (
     <div className="grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="flex justify-center">
+        <SearchBox searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+        <div className="relative inline-block"></div>
+        <div className="relative inline-block">
+          <DropdownMenu
+            options={[
+              "All",
+              "Community Blogs",
+              "Microsoft Blogs",
+              "GitHub Updates",
+              "YouTube",
+            ]}
+            selectedOption={selectedFilter}
+            onOptionSelect={setSelectedFilter}
+          />
+        </div>
+      </div>
+
       {filteredItemsState.map((item, index) => {
         if (!item) {
           return null;
@@ -295,6 +326,17 @@ function AllCards() {
                 createdAt={item.createdAt}
                 userId={user?.id ?? null}
               />
+            )}
+            {isScrolling && (
+              <div
+                className="fixed bottom-5 right-2 z-50 mb-10 cursor-pointer"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              >
+                <Lottie
+                  animationData={backtotop}
+                  style={{ width: 100, height: 100 }}
+                />
+              </div>
             )}
           </div>
         );

@@ -1,54 +1,21 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import type { NextPage } from "next";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MdPrivacyTip } from "react-icons/md";
 import { GrCompliance } from "react-icons/gr";
-import { HiOutlineSelector } from "react-icons/hi";
-import { BsTwitter, BsBookmarkPlusFill, BsTools } from "react-icons/bs";
-import { FcFaq } from "react-icons/fc";
-import { useSpring, animated } from "@react-spring/web";
-import { BsLinkedin } from "react-icons/bs";
-import { IoNewspaperOutline } from "react-icons/io5";
-import Lottie from "lottie-react";
-//import loading_animated from "../assets/loading_animated.json";
-import backtotop from "../assets/backtotop_animated.json";
-import SearchBox from "../components/SearchBox";
-import DropdownMenu from "../components/DropdownShare";
+
+import { BsTwitter } from "react-icons/bs";
+
 import AllCards from "~/components/AllCards";
 import Header from "~/components/Header";
 import Head from "next/head";
 
 const Home: NextPage = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedAuthor, setSelectedAuthor] = useState<string | null>(null);
-
-  const [selectedFilter, setSelectedFilter] = useState("All");
-  const [uniqueAuthors, setUniqueAuthors] = useState<string[]>([]);
-
   return (
     <div className="container mx-auto">
       <div className="mb-4">
         <Header />
-
-        <div className="flex justify-center">
-          <SearchBox searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-          <div className="relative inline-block"></div>
-          <div className="relative inline-block">
-            <DropdownMenu
-              options={[
-                "All",
-                "Community Blogs",
-                "Microsoft Blogs",
-                "GitHub Updates",
-                "YouTube",
-              ]}
-              selectedOption={selectedFilter}
-              onOptionSelect={setSelectedFilter}
-            />
-          </div>
-        </div>
       </div>
 
       <AllCards />
