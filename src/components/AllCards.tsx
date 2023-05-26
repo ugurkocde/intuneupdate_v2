@@ -16,10 +16,9 @@ import WindowsBlogPostCard, {
   WindowsBlogPostData,
 } from "~/components/WindowsBlogPostCard";
 import { ToastContainer, toast } from "react-toastify";
+import { FaArrowUp } from "react-icons/fa";
 import DropdownMenu from "../components/DropdownShare";
 import SearchBox from "../components/SearchBox";
-import Lottie from "lottie-react";
-import backtotop from "../assets/backtotop_animated.json";
 //import loading_animated from "../assets/loading_animated.json";
 
 interface VideoData {
@@ -329,13 +328,10 @@ function AllCards() {
             )}
             {isScrolling && (
               <div
-                className="fixed bottom-5 right-2 z-50 mb-10 cursor-pointer"
+                className="fixed bottom-10 right-0 z-50 mb-4 mr-4 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700"
                 onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               >
-                <Lottie
-                  animationData={backtotop}
-                  style={{ width: 100, height: 100 }}
-                />
+                <FaArrowUp />
               </div>
             )}
           </div>
