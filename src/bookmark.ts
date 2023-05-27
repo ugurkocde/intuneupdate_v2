@@ -1,10 +1,18 @@
 // src/bookmarks.ts
 import { supabase } from "./supabaseClient";
 
-export async function addBookmark(userId: string, blogId: number) {
-  const { data, error } = await supabase
-    .from("Bookmark")
-    .insert([{ userId, blogId }]);
+export async function addBookmark(
+  userId: string,
+  blogId?: number,
+  windowsBlogId?: number
+) {
+  const bookmark = {
+    userId,
+    ...(blogId && { blogId }),
+    ...(windowsBlogId && { windowsBlogId }),
+  };
+
+  const { data, error } = await supabase.from("Bookmark").insert([bookmark]);
 
   if (error) {
     throw error;
@@ -13,12 +21,22 @@ export async function addBookmark(userId: string, blogId: number) {
   return data;
 }
 
-export async function removeBookmark(userId: string, blogId: number) {
-  const { data, error } = await supabase
-    .from("Bookmark")
-    .delete()
-    .eq("userId", userId)
-    .eq("blogId", blogId);
+export async function removeBookmark(
+  userId: string,
+  blogId?: number,
+  windowsBlogId?: number
+) {
+  let query = supabase.from("Bookmark").delete().eq("userId", userId);
+
+  if (blogId) {
+    query = query.eq("blogId", blogId);
+  }
+
+  if (windowsBlogId) {
+    query = query.eq("windowsBlogId", windowsBlogId);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     throw error;
@@ -30,7 +48,7 @@ export async function removeBookmark(userId: string, blogId: number) {
 export const getUserBookmarks = async (userId: string) => {
   const { data, error } = await supabase
     .from("Bookmark")
-    .select("*, BlogPost(*)")
+    .select("*, BlogPost(*), WindowsBlogPost(*)")
     .eq("userId", userId)
     .order("createdAt", { ascending: false });
 

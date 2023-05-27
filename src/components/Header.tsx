@@ -2,7 +2,6 @@ import React, { useEffect, useState, useMemo, useRef } from "react";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { BsBookmarkPlusFill, BsTools } from "react-icons/bs";
-import { useSpring, animated } from "@react-spring/web";
 import { BsLinkedin } from "react-icons/bs";
 import { FaQuestionCircle } from "react-icons/fa";
 import { IoNewspaperOutline } from "react-icons/io5";
@@ -23,12 +22,6 @@ function Header() {
       setIsClosing(false);
     }
   }, [isClosing]);
-
-  const menuAnimation = useSpring({
-    transform: isOpen ? "translateY(0)" : "translateY(-100%)",
-    opacity: isOpen ? 1 : 0,
-    display: isOpen ? "flex" : "none",
-  });
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -75,9 +68,8 @@ function Header() {
               loop={false}
               style={{ cursor: "pointer", width: 50, height: 50 }} // Adjust the size as you need
             />
-            <animated.div
+            <div
               ref={menuRef}
-              style={menuAnimation}
               className="absolute mt-2 min-w-[10rem] rounded-md bg-white shadow-lg"
             >
               {isOpen && (
@@ -137,7 +129,7 @@ function Header() {
                   </div>
                 </div>
               )}
-            </animated.div>
+            </div>
           </div>
 
           <div className="w-full text-center">

@@ -10,6 +10,7 @@ import { RxOpenInNewWindow } from "react-icons/rx";
 import { toast } from "react-toastify";
 import LikeButton from "../pages/LikeButton";
 import { useUser } from "@clerk/clerk-react";
+import BookmarkButton from "./BookmarkButton";
 
 export interface WindowsBlogPostData {
   id: number;
@@ -28,10 +29,19 @@ interface BlogPostCardProps {
   userBookmarks: Record<number, boolean>;
   handleBookmark: (blogId: number) => void;
   handleRemoveBookmark: (blogId: number) => void;
+  id: number;
+  title: string;
+  url: string;
+  author: string;
+  createdAt: string;
+  userId: string | null;
 }
 
 const WindowsBlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
-  ({ blog, userBookmarks, handleBookmark, handleRemoveBookmark }, ref) => {
+  (
+    { blog, userBookmarks, handleBookmark, handleRemoveBookmark, userId },
+    ref
+  ) => {
     const shareButtonContainerRef = useRef<HTMLDivElement>(null);
     const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -118,24 +128,12 @@ const WindowsBlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
 
           <div className="mb-2 mt-2 flex flex-col">
             <div className="mb-2 flex flex-wrap items-center">
-              {!userBookmarks[blog.id] && (
-                <button
-                  className="mb-2 mr-2 rounded border border-gray-300 bg-green-500 p-4 px-4 py-2 font-bold text-white hover:bg-green-700 md:mb-0"
-                  onClick={() => handleBookmark(blog.id)}
-                  title="Add Bookmark"
-                >
-                  <BsBookmarkPlusFill />
-                </button>
-              )}
-              {userBookmarks[blog.id] && (
-                <button
-                  className="mb-2 mr-2 rounded border border-gray-300 bg-red-500 p-4 px-4 py-2 font-bold text-white hover:bg-red-700 md:mb-0"
-                  onClick={() => handleRemoveBookmark(blog.id)}
-                  title="Remove bookmark"
-                >
-                  <BsBookmarkDashFill />
-                </button>
-              )}
+              <BookmarkButton
+                windowsBlogId={blog.id}
+                userId={user?.id || null}
+                userBookmarks={userBookmarks}
+                blogId={0}
+              />
               <a href={blog.url} target="_blank" rel="noopener noreferrer">
                 <button
                   className="mb-2 mr-2 rounded border border-gray-300 bg-blue-500 p-4 px-4 py-2 font-bold text-white hover:bg-blue-700 md:mb-0"
