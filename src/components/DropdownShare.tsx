@@ -12,10 +12,11 @@ function DropdownMenu({
   onOptionSelect,
 }: DropdownMenuProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const node = useRef(null);
 
-  const handleClick = (e) => {
-    if (node.current.contains(e.target)) {
+  const node = useRef<HTMLDivElement>(null);
+
+  const handleClick = (e: MouseEvent) => {
+    if (node.current && node.current.contains(e.target as Node)) {
       // inside click
       return;
     }
