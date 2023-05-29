@@ -4,7 +4,9 @@ import { useTrail, animated } from "@react-spring/web";
 import { BsTwitter } from "react-icons/bs";
 import { MdPrivacyTip } from "react-icons/md";
 import { GrCompliance } from "react-icons/gr";
+import Header from "~/components/Header";
 import Link from "next/link";
+import Footer from "~/components/Footer";
 
 const FAQ: React.FC = () => {
   const faqData = [
@@ -73,14 +75,9 @@ const FAQ: React.FC = () => {
 
   return (
     <div className="container mx-auto pb-20">
-      <h1 className="mb-4 text-3xl font-bold">Frequently Asked Questions</h1>
-      <li className="mr-4">
-        <Link href="/">
-          <button className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
-            Homepage
-          </button>
-        </Link>
-      </li>
+      <div className="mb-4">
+        <Header title="FAQ" />
+      </div>
       <div className="grid gap-4">
         {trail.map((style, index) => (
           <animated.div
@@ -95,44 +92,7 @@ const FAQ: React.FC = () => {
           </animated.div>
         ))}
       </div>
-      <footer className="fixed-footer mt-12 border-t border-gray-200 bg-white py-4 shadow shadow-lg">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between space-x-4">
-            <div className="flex items-center space-x-4">
-              <a
-                href="https://twitter.com/IntuneUpdate"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Twitter"
-              >
-                <BsTwitter className="text-xl hover:text-blue-500" />
-              </a>
-            </div>
-            <div className="sm:text-s text-center text-sm font-semibold md:w-1/2 md:text-base">
-              <a></a>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <a
-                href="https://ugurkoc.de/privacy-policy/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Privacy Policy"
-              >
-                <MdPrivacyTip className="text-xl hover:text-blue-500" />
-              </a>
-              <a
-                href="https://ugurkoc.de/imprint/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Imprint"
-              >
-                <GrCompliance className="text-xl hover:text-blue-700" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

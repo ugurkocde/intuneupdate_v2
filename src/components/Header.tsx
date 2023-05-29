@@ -1,15 +1,25 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import { BsBookmarkPlusFill, BsTools } from "react-icons/bs";
-import { BsLinkedin } from "react-icons/bs";
+import {
+  BsBookmarkPlusFill,
+  BsTools,
+  BsLinkedin,
+  BsFillJournalBookmarkFill,
+  BsFillBookmarkFill,
+} from "react-icons/bs";
 import { FaQuestionCircle } from "react-icons/fa";
 import { IoNewspaperOutline } from "react-icons/io5";
 import { BiLogIn, BiLogOut } from "react-icons/bi";
+import { ImHome } from "react-icons/im";
 import Lottie from "lottie-react";
 import burgermenu from "../assets/burger-menu_animated.json";
 
-function Header() {
+type HeaderProps = {
+  title: string;
+};
+
+function Header({ title }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [hasShadow, setHasShadow] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null); // Tell TypeScript that the ref will be used on an HTMLDivElement
@@ -81,6 +91,28 @@ function Header() {
                     aria-labelledby="options-menu"
                   >
                     <Link
+                      href="/"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white"
+                      role="menuitem"
+                    >
+                      <button className="flex w-full items-center font-bold">
+                        {" "}
+                        <ImHome />
+                        <span className="ml-2">Home</span>
+                      </button>
+                    </Link>
+                    <Link
+                      href="/bookmarks"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white"
+                      role="menuitem"
+                    >
+                      <button className="flex w-full items-center font-bold">
+                        {" "}
+                        <BsFillJournalBookmarkFill />
+                        <span className="ml-2">Bookmarks</span>
+                      </button>
+                    </Link>
+                    <Link
                       href="/faq"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white"
                       role="menuitem"
@@ -134,7 +166,7 @@ function Header() {
 
           <div className="w-full text-center">
             <h1 className="mb-4 mt-2 text-4xl font-bold sm:text-5xl">
-              Intune Update
+              {title}
             </h1>
           </div>
           <div className="relative mr-5">
@@ -148,16 +180,16 @@ function Header() {
               </SignedOut>
               <SignedIn>
                 <li className="mr-4 hidden sm:block">
-                  <Link href="/bookmarks">
-                    <button className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
-                      My Bookmarks
+                  <Link href="/bookmarks" title="Bookmarks">
+                    <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
+                      <BsFillBookmarkFill />
                     </button>
                   </Link>
                 </li>
                 <li className="mr-4 block sm:hidden">
-                  <Link href="/bookmarks">
+                  <Link href="/bookmarks" title="Bookmarks">
                     <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
-                      <BsBookmarkPlusFill />
+                      <BsFillBookmarkFill />
                     </button>
                   </Link>
                 </li>

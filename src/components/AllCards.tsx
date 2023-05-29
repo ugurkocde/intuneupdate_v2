@@ -19,6 +19,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { FaArrowUp } from "react-icons/fa";
 import DropdownMenu from "../components/DropdownShare";
 import SearchBox from "../components/SearchBox";
+import InfiniteScroll from "react-infinite-scroll-component";
 //import loading_animated from "../assets/loading_animated.json";
 
 interface VideoData {
@@ -69,46 +70,6 @@ function AllCards() {
     window.addEventListener("scroll", checkScrollTop);
     return () => window.removeEventListener("scroll", checkScrollTop);
   }, [isScrolling]);
-
-  useEffect(() => {
-    const fetchVideos = async () => {
-      const data = await getVideos();
-      setVideos(data);
-    };
-    fetchVideos();
-  }, []);
-
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      const data = await getBlogs();
-      setBlogs(data);
-    };
-    fetchBlogs();
-  }, []);
-
-  useEffect(() => {
-    const fetchMSBlogs = async () => {
-      const data = await getMSBlogs();
-      setMSBlogs(data);
-    };
-    fetchMSBlogs();
-  }, []);
-
-  useEffect(() => {
-    const fetchWindowsBlogs = async () => {
-      const data = await getWindowsBlogs();
-      setWindowsBlogs(data);
-    };
-    fetchWindowsBlogs();
-  }, []);
-
-  useEffect(() => {
-    const fetchIntuneMSBlogs = async () => {
-      const data = await getIntuneMSBlogs();
-      setIntuneMSBlogs(data);
-    };
-    fetchIntuneMSBlogs();
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -233,26 +194,31 @@ function AllCards() {
   const [filteredItemsState, setFilteredItems] = useState<Item[]>([]);
 
   useEffect(() => {
-    const filteredData = combinedItems.filter((item) =>
-      item.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredItems(filteredData);
-  }, [combinedItems, searchTerm]);
+    const filterItems = () => {
+      let filteredData = combinedItems;
 
-  const [selectedAuthor, setSelectedAuthor] = useState<string>("All");
+      if (selectedFilter === "Community Blogs") {
+        filteredData = filteredData.filter((item) => item.itemType === "blog");
+      } else if (selectedFilter === "Microsoft Blogs") {
+        filteredData = filteredData.filter(
+          (item) =>
+            item.itemType === "msblog" ||
+            item.itemType === "Intunemsblog" ||
+            item.itemType === "Windowsblog"
+        );
+      } else if (selectedFilter === "YouTube") {
+        filteredData = filteredData.filter((item) => item.itemType === "video");
+      }
 
-  const handleAuthorChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedAuthor(event.target.value);
-  };
+      const filteredBySearchTermData = filteredData.filter((item) =>
+        item.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
 
-  useEffect(() => {
-    const filteredData = combinedItems.filter(
-      (item) =>
-        item.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (selectedAuthor === "All" || item.author === selectedAuthor)
-    );
-    setFilteredItems(filteredData);
-  }, [combinedItems, searchTerm, selectedAuthor]);
+      setFilteredItems(filteredBySearchTermData);
+    };
+
+    filterItems();
+  }, [combinedItems, searchTerm, selectedFilter]);
 
   return (
     <div className="ml-5 mr-5 pb-20">
@@ -260,13 +226,7 @@ function AllCards() {
         <SearchBox searchTerm={searchTerm} onSearchChange={setSearchTerm} />
         <div className="relative inline-block">
           <DropdownMenu
-            options={[
-              "All",
-              "Community Blogs",
-              "Microsoft Blogs",
-              "GitHub Updates",
-              "YouTube",
-            ]}
+            options={["All", "Community Blogs", "Microsoft Blogs", "YouTube"]}
             selectedOption={selectedFilter}
             onOptionSelect={setSelectedFilter}
           />

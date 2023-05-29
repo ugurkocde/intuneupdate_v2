@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 interface DropdownMenuProps {
   options: string[];
@@ -12,9 +12,31 @@ function DropdownMenu({
   onOptionSelect,
 }: DropdownMenuProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const node = useRef(null);
+
+  const handleClick = (e) => {
+    if (node.current.contains(e.target)) {
+      // inside click
+      return;
+    }
+    // outside click
+    setDropdownOpen(false);
+  };
+
+  useEffect(() => {
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClick);
+    } else {
+      document.removeEventListener("mousedown", handleClick);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, [dropdownOpen]);
 
   return (
-    <div className="relative inline-block">
+    <div className="relative inline-block" ref={node}>
       <button
         className="rounded border border-gray-300 px-4 py-2 font-bold hover:border-gray-400"
         onClick={() => {

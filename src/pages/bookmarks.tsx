@@ -4,6 +4,9 @@ import { getUserBookmarks } from "../bookmark";
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
 import YoutubeVideoCard from "../components/YoutubeVideoCard";
+import Footer from "~/components/Footer";
+
+import Header from "~/components/Header";
 
 interface BookmarkData {
   blogBookmarks: any[];
@@ -35,21 +38,10 @@ const Dashboard = () => {
 
   return (
     <div className="container mx-auto">
-      <div className="flex items-center justify-between">
-        <h1 className="mb-4 text-4xl font-bold">Bookmarks</h1>
-        <ul className="flex items-center">
-          <li className="mr-4">
-            <Link href="/">
-              <button className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
-                Homepage
-              </button>
-            </Link>
-          </li>
-          <li>
-            <UserButton />
-          </li>
-        </ul>
+      <div className="mb-4">
+        <Header title="Bookmarks" />
       </div>
+
       <div className="grid grid-cols-3 gap-4">
         {bookmarks.blogBookmarks.map((bookmark: any) => (
           <div key={bookmark.blogId} className="rounded bg-white p-4 shadow">
@@ -87,6 +79,7 @@ const Dashboard = () => {
           </div>
         ))}
       </div>
+      <Footer />
     </div>
   );
 };
