@@ -109,7 +109,7 @@ function Header({ title }: HeaderProps) {
                       <button className="flex w-full items-center font-bold">
                         {" "}
                         <BsFillJournalBookmarkFill />
-                        <span className="ml-2">Bookmarks</span>
+                        <span className="ml-2">My Bookmarks</span>
                       </button>
                     </Link>
                     <Link

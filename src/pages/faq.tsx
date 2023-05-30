@@ -1,11 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useTrail, animated } from "@react-spring/web";
-import { BsTwitter } from "react-icons/bs";
-import { MdPrivacyTip } from "react-icons/md";
-import { GrCompliance } from "react-icons/gr";
 import Header from "~/components/Header";
-import Link from "next/link";
 import Footer from "~/components/Footer";
 
 const FAQ: React.FC = () => {
@@ -60,7 +56,16 @@ const FAQ: React.FC = () => {
       answer:
         "If you need to contact the Intune Update team for any reason, you can reach us through the contact form on the website. We will respond to your inquiry as soon as possible.",
     },
-    // Add more FAQ data as needed
+    {
+      question: "Can I access content without signing in?",
+      answer:
+        "Yes, you can access all the content on Intune Update without signing in. However, you will not be able to bookmark items or access your bookmarks without signing in.",
+    },
+    {
+      question: "How do I remove a bookmark?",
+      answer:
+        "To remove a bookmark, click on the bookmark icon next to the item. The bookmark will be removed from your list of bookmarks.",
+    },
   ];
 
   const trail = useTrail(faqData.length, {

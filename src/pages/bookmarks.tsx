@@ -39,7 +39,7 @@ const Dashboard = () => {
   return (
     <div className="container mx-auto">
       <div className="mb-4">
-        <Header title="Bookmarks" />
+        <Header title="My Bookmarks" />
       </div>
 
       <div className="grid grid-cols-3 gap-4">

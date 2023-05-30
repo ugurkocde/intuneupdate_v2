@@ -42,7 +42,6 @@ interface Item {
 
 function AllCards() {
   const { user, isSignedIn } = useUser();
-  const [searchTerm, setSearchTerm] = useState("");
   const [uniqueAuthors, setUniqueAuthors] = useState<string[]>(["All"]);
   const [userBookmarks, setUserBookmarks] = useState<Record<number, boolean>>(
     {}
@@ -55,7 +54,6 @@ function AllCards() {
   );
   const [WindowsBlogs, setWindowsBlogs] = useState<WindowsBlogPostData[]>([]);
 
-  const [selectedFilter, setSelectedFilter] = useState("All");
   const [isScrolling, setIsScrolling] = useState(false);
 
   useEffect(() => {
@@ -87,6 +85,13 @@ function AllCards() {
           getIntuneMSBlogs(),
           getWindowsBlogs(),
         ]);
+
+        /*         console.log("Blog data: ", blogData);
+        console.log("MSBlog data: ", msBlogData);
+        console.log("Video data: ", videoData);
+        console.log("IntuneMSBlog data: ", IntunemsBlogPosts);
+        console.log("WindowsBlog data: ", WindowsBlogPosts); */
+
         setBlogs(blogData);
         setMSBlogs(msBlogData);
         setIntuneMSBlogs(IntunemsBlogPosts);
@@ -194,45 +199,11 @@ function AllCards() {
   const [filteredItemsState, setFilteredItems] = useState<Item[]>([]);
 
   useEffect(() => {
-    const filterItems = () => {
-      let filteredData = combinedItems;
-
-      if (selectedFilter === "Community Blogs") {
-        filteredData = filteredData.filter((item) => item.itemType === "blog");
-      } else if (selectedFilter === "Microsoft Blogs") {
-        filteredData = filteredData.filter(
-          (item) =>
-            item.itemType === "msblog" ||
-            item.itemType === "Intunemsblog" ||
-            item.itemType === "Windowsblog"
-        );
-      } else if (selectedFilter === "YouTube") {
-        filteredData = filteredData.filter((item) => item.itemType === "video");
-      }
-
-      const filteredBySearchTermData = filteredData.filter((item) =>
-        item.title.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-
-      setFilteredItems(filteredBySearchTermData);
-    };
-
-    filterItems();
-  }, [combinedItems, searchTerm, selectedFilter]);
+    setFilteredItems(combinedItems);
+  }, [combinedItems]);
 
   return (
     <div className="ml-5 mr-5 pb-20">
-      <div className="mb-4 flex justify-center">
-        <SearchBox searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-        <div className="relative inline-block">
-          <DropdownMenu
-            options={["All", "Community Blogs", "Microsoft Blogs", "YouTube"]}
-            selectedOption={selectedFilter}
-            onOptionSelect={setSelectedFilter}
-          />
-        </div>
-      </div>
-
       <div className="ml-2 mr-2 grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 lg:grid-cols-3">
         {" "}
         {filteredItemsState.map((item, index) => {

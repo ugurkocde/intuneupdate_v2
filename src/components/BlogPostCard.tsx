@@ -193,12 +193,12 @@ const BlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
               </div>
             </div>
 
-            <button
+            {/*             <button
               className="mt-2 w-full rounded bg-gray-100 py-2 text-gray-700 hover:bg-gray-200"
               onClick={() => toggleSummary(blog.id)}
             >
               {openSummary === blog.id ? "Hide Summary" : "Show Summary"}
-            </button>
+            </button> */}
           </div>
 
           <div
