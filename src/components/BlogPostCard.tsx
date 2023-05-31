@@ -121,6 +121,8 @@ const BlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
                 userId={user?.id || null}
                 userBookmarks={userBookmarks}
                 windowsBlogId={0}
+                intunemsBlogId={0}
+                msBlogId={0}
               />
 
               <a href={blog.url} target="_blank" rel="noopener noreferrer">

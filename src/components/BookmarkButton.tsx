@@ -5,6 +5,8 @@ import { BsBookmarkPlusFill, BsBookmarkDashFill } from "react-icons/bs";
 interface BookmarkButtonProps {
   blogId: number;
   windowsBlogId: number;
+  intunemsBlogId: number;
+  msBlogId: number;
   userId: string | null;
   userBookmarks: { [key: number]: any };
 }
@@ -14,6 +16,8 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
   userId,
   userBookmarks,
   windowsBlogId,
+  intunemsBlogId,
+  msBlogId,
 }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
 
@@ -24,17 +28,25 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
         if (fetchedBookmarks) {
           userBookmarks = { ...fetchedBookmarks.blogBookmarks };
           setIsBookmarked(
-            !!userBookmarks[blogId] || !!userBookmarks[windowsBlogId]
+            !!userBookmarks[blogId] ||
+              !!userBookmarks[windowsBlogId] ||
+              !!userBookmarks[intunemsBlogId] ||
+              !!userBookmarks[msBlogId]
           );
         }
       }
     };
     fetchBookmarks();
-  }, [userId, blogId, windowsBlogId]);
+  }, [userId, blogId, windowsBlogId, intunemsBlogId, msBlogId]);
 
   useEffect(() => {
-    setIsBookmarked(!!userBookmarks[blogId] || !!userBookmarks[windowsBlogId]);
-  }, [userBookmarks, blogId, windowsBlogId]);
+    setIsBookmarked(
+      !!userBookmarks[blogId] ||
+        !!userBookmarks[windowsBlogId] ||
+        !!userBookmarks[intunemsBlogId] ||
+        !!userBookmarks[msBlogId]
+    );
+  }, [userBookmarks, blogId, windowsBlogId, intunemsBlogId, msBlogId]);
 
   const handleBookmark = async () => {
     if (!userId) {
@@ -43,10 +55,22 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
     }
 
     if (isBookmarked) {
-      await removeBookmark(userId, blogId, windowsBlogId);
+      await removeBookmark(
+        userId,
+        blogId,
+        windowsBlogId,
+        intunemsBlogId,
+        msBlogId
+      );
       setIsBookmarked(false);
     } else {
-      await addBookmark(userId, blogId, windowsBlogId);
+      await addBookmark(
+        userId,
+        blogId,
+        windowsBlogId,
+        intunemsBlogId,
+        msBlogId
+      );
       setIsBookmarked(true);
     }
   };

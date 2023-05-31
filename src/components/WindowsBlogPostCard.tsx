@@ -133,6 +133,8 @@ const WindowsBlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
                 userId={user?.id || null}
                 userBookmarks={userBookmarks}
                 blogId={0}
+                intunemsBlogId={0}
+                msBlogId={0}
               />
               <a href={blog.url} target="_blank" rel="noopener noreferrer">
                 <button

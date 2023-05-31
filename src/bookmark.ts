@@ -4,12 +4,16 @@ import { supabase } from "./supabaseClient";
 export async function addBookmark(
   userId: string,
   blogId?: number,
-  windowsBlogId?: number
+  windowsBlogId?: number,
+  intunemsBlogId?: number,
+  msBlogId?: number
 ) {
   const bookmark = {
     userId,
     ...(blogId && { blogId }),
     ...(windowsBlogId && { windowsBlogId }),
+    ...(intunemsBlogId && { intunemsBlogId }),
+    ...(msBlogId && { msBlogId }),
   };
 
   const { data, error } = await supabase.from("Bookmark").insert([bookmark]);
@@ -24,7 +28,9 @@ export async function addBookmark(
 export async function removeBookmark(
   userId: string,
   blogId?: number,
-  windowsBlogId?: number
+  windowsBlogId?: number,
+  intunemsBlogId?: number,
+  msBlogId?: number
 ) {
   let query = supabase.from("Bookmark").delete().eq("userId", userId);
 
@@ -34,6 +40,14 @@ export async function removeBookmark(
 
   if (windowsBlogId) {
     query = query.eq("windowsBlogId", windowsBlogId);
+  }
+
+  if (intunemsBlogId) {
+    query = query.eq("intunemsBlogId", intunemsBlogId);
+  }
+
+  if (msBlogId) {
+    query = query.eq("msBlogId", msBlogId);
   }
 
   const { data, error } = await query;
@@ -48,7 +62,7 @@ export async function removeBookmark(
 export const getUserBookmarks = async (userId: string) => {
   const { data, error } = await supabase
     .from("Bookmark")
-    .select("*, BlogPost(*), WindowsBlogPost(*)")
+    .select("*, BlogPost(*), WindowsBlogPost(*), IntuneMSBlogPost(*)")
     .eq("userId", userId)
     .order("createdAt", { ascending: false });
 

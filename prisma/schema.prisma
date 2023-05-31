@@ -64,7 +64,7 @@ model IntuneMSBlogPost {
 model Bookmark {
   id          Int        @id @default(autoincrement())
   userId      String
-  blogId      Int
+  blogId      Int?
   msBlogId    Int?       // This is nullable because a bookmark can be related to either a BlogPost or a MSBlogPost
   windowsBlogId    Int?       // This is nullable because a bookmark can be related to either a BlogPost or a MSBlogPost
   intunemsBlogId    Int?       // This is nullable because a bookmark can be related to either a BlogPost or a MSBlogPost
