@@ -20,7 +20,8 @@ import { FaArrowUp } from "react-icons/fa";
 import DropdownMenu from "../components/DropdownShare";
 import SearchBox from "../components/SearchBox";
 import InfiniteScroll from "react-infinite-scroll-component";
-//import loading_animated from "../assets/loading_animated.json";
+import loading_animated from "../assets/loading_animated.json";
+import Lottie from "lottie-react";
 
 interface VideoData {
   id: number;
@@ -55,6 +56,8 @@ function AllCards() {
   const [WindowsBlogs, setWindowsBlogs] = useState<WindowsBlogPostData[]>([]);
 
   const [isScrolling, setIsScrolling] = useState(false);
+
+  const [itemsPerPage, setItemsPerPage] = useState(12);
 
   useEffect(() => {
     const checkScrollTop = () => {
@@ -202,88 +205,105 @@ function AllCards() {
     setFilteredItems(combinedItems);
   }, [combinedItems]);
 
+  const loadMore = () => {
+    setItemsPerPage((prevItemsPerPage) => prevItemsPerPage + 12);
+  };
+
+  const visibleItems = combinedItems.slice(0, itemsPerPage);
+
   return (
     <div className="ml-5 mr-5 pb-20">
-      <div className="ml-2 mr-2 grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 lg:grid-cols-3">
-        {" "}
-        {filteredItemsState.map((item, index) => {
-          if (!item) {
-            return null;
-          }
-          return (
-            <div key={item.id}>
-              {item.itemType === "blog" && (
-                <BlogPostCard
-                  blog={item}
-                  userBookmarks={userBookmarks}
-                  handleBookmark={handleAddBookmark}
-                  handleRemoveBookmark={handleRemoveBookmarkLocal}
-                  id={0}
-                  title={""}
-                  url={""}
-                  author={""}
-                  createdAt={""}
-                  userId={null}
-                />
-              )}
+      <InfiniteScroll
+        dataLength={visibleItems.length}
+        next={loadMore}
+        hasMore={visibleItems.length < combinedItems.length}
+        loader={
+          <div>
+            <Lottie animationData={loading_animated} />
+          </div>
+        }
+      >
+        <div className="ml-2 mr-2 grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 lg:grid-cols-3">
+          {" "}
+          {visibleItems.map((item, index) => {
+            if (!item) {
+              return null;
+            }
+            return (
+              <div key={item.id}>
+                {item.itemType === "blog" && (
+                  <BlogPostCard
+                    blog={item}
+                    userBookmarks={userBookmarks}
+                    handleBookmark={handleAddBookmark}
+                    handleRemoveBookmark={handleRemoveBookmarkLocal}
+                    id={0}
+                    title={""}
+                    url={""}
+                    author={""}
+                    createdAt={""}
+                    userId={null}
+                  />
+                )}
 
-              {item.itemType === "msblog" && (
-                <MSBlogPostCard
-                  blog={item}
-                  userBookmarks={userBookmarks}
-                  handleBookmark={handleAddBookmark}
-                  handleRemoveBookmark={handleRemoveBookmarkLocal}
-                />
-              )}
+                {item.itemType === "msblog" && (
+                  <MSBlogPostCard
+                    blog={item}
+                    userBookmarks={userBookmarks}
+                    handleBookmark={handleAddBookmark}
+                    handleRemoveBookmark={handleRemoveBookmarkLocal}
+                  />
+                )}
 
-              {item.itemType === "Intunemsblog" && (
-                <IntuneMSBlogPostCard
-                  blog={item}
-                  userBookmarks={userBookmarks}
-                  handleBookmark={handleAddBookmark}
-                  handleRemoveBookmark={handleRemoveBookmarkLocal}
-                />
-              )}
+                {item.itemType === "Intunemsblog" && (
+                  <IntuneMSBlogPostCard
+                    blog={item}
+                    userBookmarks={userBookmarks}
+                    handleBookmark={handleAddBookmark}
+                    handleRemoveBookmark={handleRemoveBookmarkLocal}
+                  />
+                )}
 
-              {item.itemType === "Windowsblog" && (
-                <WindowsBlogPostCard
-                  blog={item}
-                  userBookmarks={userBookmarks}
-                  handleBookmark={handleAddBookmark}
-                  handleRemoveBookmark={handleRemoveBookmarkLocal}
-                  id={0}
-                  title={""}
-                  url={""}
-                  author={""}
-                  createdAt={""}
-                  userId={null}
-                />
-              )}
+                {item.itemType === "Windowsblog" && (
+                  <WindowsBlogPostCard
+                    blog={item}
+                    userBookmarks={userBookmarks}
+                    handleBookmark={handleAddBookmark}
+                    handleRemoveBookmark={handleRemoveBookmarkLocal}
+                    id={0}
+                    title={""}
+                    url={""}
+                    author={""}
+                    createdAt={""}
+                    userId={null}
+                  />
+                )}
 
-              {item.itemType === "video" && (
-                <YoutubeVideoCard
-                  id={item.id}
-                  title={item.title}
-                  url={item.url}
-                  author={item.author}
-                  createdAt={item.createdAt}
-                  userId={user?.id ?? null}
-                />
-              )}
-              {isScrolling && (
-                <div
-                  className="fixed bottom-10 right-0 z-50 mb-4 mr-4 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700"
-                  onClick={() =>
-                    window.scrollTo({ top: 0, behavior: "smooth" })
-                  }
-                >
-                  <FaArrowUp />
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
+                {item.itemType === "video" && (
+                  <YoutubeVideoCard
+                    id={item.id}
+                    title={item.title}
+                    url={item.url}
+                    author={item.author}
+                    createdAt={item.createdAt}
+                    userId={user?.id ?? null}
+                  />
+                )}
+                {isScrolling && (
+                  <div
+                    className="fixed bottom-10 right-0 z-50 mb-4 mr-4 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700"
+                    onClick={() =>
+                      window.scrollTo({ top: 0, behavior: "smooth" })
+                    }
+                  >
+                    <FaArrowUp />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </InfiniteScroll>
     </div>
   );
 }

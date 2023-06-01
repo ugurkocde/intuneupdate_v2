@@ -62,7 +62,9 @@ export async function removeBookmark(
 export const getUserBookmarks = async (userId: string) => {
   const { data, error } = await supabase
     .from("Bookmark")
-    .select("*, BlogPost(*), WindowsBlogPost(*), IntuneMSBlogPost(*)")
+    .select(
+      "*, BlogPost(*), WindowsBlogPost(*), IntuneMSBlogPost(*), MSBlogPost(*)"
+    )
     .eq("userId", userId)
     .order("createdAt", { ascending: false });
 

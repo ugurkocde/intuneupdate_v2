@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { addBookmark, removeBookmark, getUserBookmarks } from "../bookmark";
 import { BsBookmarkPlusFill, BsBookmarkDashFill } from "react-icons/bs";
+import { toast } from "react-toastify";
 
 interface BookmarkButtonProps {
   blogId: number;
@@ -26,13 +27,14 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
       if (userId) {
         const fetchedBookmarks = await getUserBookmarks(userId);
         if (fetchedBookmarks) {
-          userBookmarks = { ...fetchedBookmarks.blogBookmarks };
-          setIsBookmarked(
-            !!userBookmarks[blogId] ||
-              !!userBookmarks[windowsBlogId] ||
-              !!userBookmarks[intunemsBlogId] ||
-              !!userBookmarks[msBlogId]
+          const isCurrentPostBookmarked = fetchedBookmarks.blogBookmarks.find(
+            (bookmark) =>
+              bookmark.blogId === blogId ||
+              bookmark.windowsBlogId === windowsBlogId ||
+              bookmark.intunemsBlogId === intunemsBlogId ||
+              bookmark.msBlogId === msBlogId
           );
+          setIsBookmarked(!!isCurrentPostBookmarked);
         }
       }
     };
@@ -50,7 +52,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
 
   const handleBookmark = async () => {
     if (!userId) {
-      alert("You must be logged in to bookmark a blog post.");
+      toast.error("You must be logged in to bookmark a blog post.");
       return;
     }
 

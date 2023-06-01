@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
 import { getUserBookmarks } from "../bookmark";
-import Link from "next/link";
-import { UserButton } from "@clerk/nextjs";
+
 import YoutubeVideoCard from "../components/YoutubeVideoCard";
 import Footer from "~/components/Footer";
 
@@ -13,7 +12,7 @@ interface BookmarkData {
   videoBookmarks: any[];
 }
 
-const Dashboard = () => {
+const Bookmark = () => {
   const [bookmarks, setBookmarks] = useState<BookmarkData>({
     blogBookmarks: [],
     videoBookmarks: [],
@@ -59,8 +58,38 @@ const Dashboard = () => {
                 </p>
               </>
             )}
+            {bookmark.WindowsBlogPost && (
+              <>
+                <h2 className="mb-2 text-xl font-bold">
+                  {bookmark.WindowsBlogPost.title}
+                </h2>
+                <p className="mb-2 text-gray-600">
+                  {bookmark.WindowsBlogPost.author} -{" "}
+                  {new Date(
+                    bookmark.WindowsBlogPost.createdAt
+                  ).toLocaleDateString()}
+                </p>
+              </>
+            )}
+            {bookmark.IntuneMSBlogPost && (
+              <>
+                <h2 className="mb-2 text-xl font-bold">
+                  {bookmark.IntuneMSBlogPost.title}
+                </h2>
+                {/* Add appropriate rendering for IntuneMSBlogPost */}
+              </>
+            )}
+            {bookmark.MSBlogPost && (
+              <>
+                <h2 className="mb-2 text-xl font-bold">
+                  {bookmark.MSBlogPost.title}
+                </h2>
+                {/* Add appropriate rendering for MSBlogPost */}
+              </>
+            )}
           </div>
         ))}
+
         {bookmarks.videoBookmarks.map((videoBookmark: any) => (
           <div
             key={videoBookmark.videoId}
@@ -84,4 +113,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Bookmark;

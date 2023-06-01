@@ -1,20 +1,37 @@
-// LikeButton.tsx
 import React, { useEffect, useState } from "react";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { toast } from "react-toastify";
 
 interface LikeButtonProps {
-  blogId: number;
+  blogId?: number;
+  intunemsBlogId?: number;
+  msBlogId?: number;
+  windowsBlogId?: number;
   userId: string | null;
 }
 
-const LikeButton: React.FC<LikeButtonProps> = ({ blogId, userId }) => {
+const LikeButton: React.FC<LikeButtonProps> = ({
+  blogId,
+  userId,
+  intunemsBlogId,
+  msBlogId,
+  windowsBlogId,
+}) => {
   const [likes, setLikes] = useState(0);
   const [liked, setLiked] = useState(false);
 
   const fetchLikes = async () => {
+    const id = blogId || intunemsBlogId || msBlogId || windowsBlogId;
+    const type = blogId
+      ? "blogId"
+      : intunemsBlogId
+      ? "intunemsBlogId"
+      : msBlogId
+      ? "msBlogId"
+      : "windowsBlogId";
+
     try {
-      const response = await fetch(`/api/likes/getLikes?blogId=${blogId}`);
+      const response = await fetch(`/api/likes/getLikes?${type}=${id}`);
 
       if (!response.ok) {
         throw new Error(`HTTP error ${response.status}`);
@@ -34,52 +51,48 @@ const LikeButton: React.FC<LikeButtonProps> = ({ blogId, userId }) => {
 
   useEffect(() => {
     fetchLikes();
-  }, []);
+  }, [blogId, intunemsBlogId, msBlogId, windowsBlogId]);
 
   const handleLike = async () => {
+    const id = blogId || intunemsBlogId || msBlogId || windowsBlogId;
+    const type = blogId
+      ? "blogId"
+      : intunemsBlogId
+      ? "intunemsBlogId"
+      : msBlogId
+      ? "msBlogId"
+      : "windowsBlogId";
+
     if (!userId) {
       toast.error("Please sign in to like this blog post.");
       return;
     }
-    if (!liked) {
-      try {
-        const response = await fetch("/api/likes/addLike", {
-          // <-- Updated URL here
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ blogId, userId }),
-        });
 
-        if (response.ok) {
-          setLiked(true);
-          setLikes(likes + 1);
-        } else {
-          console.error("Failed to like the post");
-        }
-      } catch (error) {
-        console.error("Error while liking the post:", error);
-      }
-    } else {
-      try {
-        const response = await fetch("/api/likes/removeLike", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ blogId, userId }),
-        });
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ [type]: id, userId }),
+    };
 
-        if (response.ok) {
-          setLiked(false);
-          setLikes(likes - 1);
-        } else {
-          console.error("Failed to remove like");
-        }
-      } catch (error) {
-        console.error("Error while unliking the post:", error);
+    const url = liked ? "/api/likes/removeLike" : "/api/likes/addLike";
+    const changeLikesBy = liked ? -1 : 1;
+
+    try {
+      const response = await fetch(url, requestOptions);
+
+      if (response.ok) {
+        setLiked(!liked);
+        setLikes((likes) => likes + changeLikesBy);
+      } else {
+        console.error(`Failed to ${liked ? "remove" : "add"} like`);
       }
+    } catch (error) {
+      console.error(
+        `Error while ${liked ? "unliking" : "liking"} the post:`,
+        error
+      );
     }
   };
 

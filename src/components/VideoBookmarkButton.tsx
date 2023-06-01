@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { addVideoBookmark, removeVideoBookmark } from "../videoBookmarks";
 import { BsBookmarkPlusFill, BsBookmarkDashFill } from "react-icons/bs";
+import { toast } from "react-toastify";
 
 interface VideoBookmarkButtonProps {
   videoId: number;
@@ -21,7 +22,7 @@ const VideoBookmarkButton: React.FC<VideoBookmarkButtonProps> = ({
 
   const handleBookmark = async () => {
     if (!userId) {
-      alert("You must be logged in to bookmark a video.");
+      toast.error("You must be logged in to bookmark a video.");
       return;
     }
 

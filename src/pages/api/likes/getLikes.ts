@@ -5,13 +5,32 @@ export default async function getLikes(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { blogId } = req.query;
+  const { blogId, intunemsBlogId, msBlogId, windowsBlogId } = req.query;
+
+  let column: string;
+  let value: any;
+
+  if (blogId) {
+    column = "blogId";
+    value = blogId;
+  } else if (intunemsBlogId) {
+    column = "intunemsBlogId";
+    value = intunemsBlogId;
+  } else if (msBlogId) {
+    column = "msBlogId";
+    value = msBlogId;
+  } else if (windowsBlogId) {
+    column = "windowsBlogId";
+    value = windowsBlogId;
+  } else {
+    return res.status(400).json({ error: "Missing id or type" });
+  }
 
   try {
     const { data, error } = await supabase
       .from("Like")
       .select("id, userId")
-      .eq("blogId", blogId);
+      .eq(column, value);
 
     if (error) {
       throw error;

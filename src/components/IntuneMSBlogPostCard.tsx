@@ -127,6 +127,7 @@ const IntuneMSBlogPostCard = React.forwardRef<
               userBookmarks={userBookmarks}
               blogId={0}
               windowsBlogId={0}
+              msBlogId={0}
             />
             <a href={blog.url} target="_blank" rel="noopener noreferrer">
               <button
@@ -200,7 +201,7 @@ const IntuneMSBlogPostCard = React.forwardRef<
         </div>
 
         <div>
-          <LikeButton blogId={blog.id} userId={user?.id || null} />
+          <LikeButton intunemsBlogId={blog.id} userId={user?.id || null} />
         </div>
       </div>
     </div>
