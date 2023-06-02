@@ -18,6 +18,7 @@ import WindowsBlogPostCard, {
   WindowsBlogPostData,
 } from "~/components/WindowsBlogPostCard";
 import { AiOutlineCloudDownload } from "react-icons/ai";
+import { RxOpenInNewWindow } from "react-icons/rx";
 
 import BookmarkButton from "../components/BookmarkButton";
 
@@ -67,11 +68,11 @@ const Bookmark = () => {
   const exportBookmarks = () => {
     const { blogBookmarks } = bookmarks;
 
-    let csvContent = "Title,URL\n";
+    let csvContent = "Title,URL,Author\n";
     blogBookmarks.forEach((bookmark: any) => {
       if (bookmark.BlogPost) {
-        const { title, url } = bookmark.BlogPost;
-        csvContent += `${title || ""},${url || ""}\n`;
+        const { author, title, url } = bookmark.BlogPost;
+        csvContent += `${author || ""},${title || ""},${url || ""}\n`;
       }
     });
 
@@ -99,7 +100,13 @@ const Bookmark = () => {
           <button
             ref={exportButtonRef}
             onClick={exportBookmarks}
-            className="flex items-center rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700"
+            disabled={bookmarks.blogBookmarks.length === 0}
+            className={`flex items-center rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700 
+              ${
+                bookmarks.blogBookmarks.length === 0
+                  ? "cursor-not-allowed opacity-50"
+                  : ""
+              }`}
           >
             <AiOutlineCloudDownload className="text-2xl" />
             <span className="ml-2">Export Bookmarks (CSV)</span>
@@ -118,9 +125,9 @@ const Bookmark = () => {
                     {bookmark.BlogPost.author} -{" "}
                     {new Date(bookmark.BlogPost.createdAt).toLocaleDateString()}
                   </p>
-                  <p className="mb-2 text-gray-600">
+                  {/*                   <p className="mb-2 text-gray-600">
                     Summary: {bookmark.BlogPost.summary}
-                  </p>
+                  </p> */}
                   <BookmarkButton
                     blogId={bookmark.blogId}
                     userId={user?.id || null}
@@ -135,6 +142,18 @@ const Bookmark = () => {
                     intunemsBlogId={0}
                     msBlogId={0}
                   />
+                  <a
+                    href={bookmark.BlogPost.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <button
+                      className="mb-2 mr-2 rounded border border-gray-300 bg-blue-500 p-4 px-4 py-2 font-bold text-white hover:bg-blue-700 md:mb-0"
+                      title="Open blog post in a new tab"
+                    >
+                      <RxOpenInNewWindow />
+                    </button>
+                  </a>
                 </>
               )}
               {bookmark.WindowsBlogPost && (
