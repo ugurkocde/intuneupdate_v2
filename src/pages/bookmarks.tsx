@@ -68,7 +68,7 @@ const Bookmark = () => {
   const exportBookmarks = () => {
     const { blogBookmarks } = bookmarks;
 
-    let csvContent = "Title,URL,Author\n";
+    let csvContent = "Author,Title,URL\n";
     blogBookmarks.forEach((bookmark: any) => {
       if (bookmark.BlogPost) {
         const { author, title, url } = bookmark.BlogPost;
