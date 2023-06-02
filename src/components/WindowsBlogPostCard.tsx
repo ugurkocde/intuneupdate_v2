@@ -120,7 +120,11 @@ const WindowsBlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
                 <img
                   src={blog.pictureUrl}
                   alt={blog.title}
-                  style={{ width: "100%", objectFit: "cover" }}
+                  style={{
+                    width: "100%",
+                    maxHeight: "200px",
+                    objectFit: "contain",
+                  }}
                 />
               </a>
             )}

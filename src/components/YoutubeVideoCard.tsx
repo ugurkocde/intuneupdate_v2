@@ -81,17 +81,12 @@ const YoutubeVideoCard = React.forwardRef<
           ></iframe>
         )}
       </div>
-      <VideoLikeButton videoId={id} userId={userId} />
-      <VideoBookmarkButton
-        videoId={id}
-        userId={userId}
-        userBookmarks={userVideoBookmarks}
-      />
-      <div>
+
+      {/*  <div>
         <a href={url} target="_blank" rel="noopener noreferrer">
           <ImYoutube className="text-4xl text-red-500" />
         </a>
-      </div>
+      </div> */}
     </div>
   );
 });

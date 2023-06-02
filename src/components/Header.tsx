@@ -15,6 +15,23 @@ import { ImHome } from "react-icons/im";
 import Lottie from "lottie-react";
 import burgermenu from "../assets/burger-menu_animated.json";
 import { useRouter } from "next/router";
+import { useClerk } from "@clerk/clerk-react";
+
+const SignOutButton = () => {
+  const { signOut } = useClerk();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/");
+  };
+
+  return (
+    <button onClick={handleSignOut}>
+      <BiLogOut className="ml-4 text-4xl" />
+    </button>
+  );
+};
 
 type HeaderProps = {
   title: string;
@@ -171,17 +188,18 @@ function Header({ title }: HeaderProps) {
               {title}
             </h1>
           </div>
-          <div className="relative mr-5">
+          <div className="relative mr-4">
             <ul className="flex items-center justify-end">
               <SignedOut>
                 <li>
                   <Link href="/sign-in" title="Login">
-                    <BiLogIn className="text-4xl" />
+                    <BiLogIn className="mr-4 text-4xl" />
                   </Link>
                 </li>
               </SignedOut>
               <SignedIn>
-                <li className="mr-4 hidden sm:block">
+                <li className="mr-4 flex items-center">
+                  {" "}
                   {router.pathname === "/bookmarks" ? (
                     <Link href="/" title="Home">
                       <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
@@ -195,9 +213,7 @@ function Header({ title }: HeaderProps) {
                       </button>
                     </Link>
                   )}
-                </li>
-                <li className="mr-4">
-                  <UserButton />
+                  <SignOutButton />{" "}
                 </li>
               </SignedIn>
             </ul>
