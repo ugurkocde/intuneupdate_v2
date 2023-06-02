@@ -6,6 +6,8 @@ import YoutubeVideoCard from "../components/YoutubeVideoCard";
 import Footer from "~/components/Footer";
 
 import Header from "~/components/Header";
+import { FaArrowUp } from "react-icons/fa";
+import { ImHome } from "react-icons/im";
 
 interface BookmarkData {
   blogBookmarks: any[];
@@ -34,6 +36,21 @@ const Bookmark = () => {
   useEffect(() => {
     document.title = "Intune Update - Bookmark";
   }, []);
+
+  const [isScrolling, setIsScrolling] = useState(false);
+
+  useEffect(() => {
+    const checkScrollTop = () => {
+      if (!isScrolling && window.pageYOffset > 400) {
+        setIsScrolling(true);
+      } else if (isScrolling && window.pageYOffset <= 400) {
+        setIsScrolling(false);
+      }
+    };
+
+    window.addEventListener("scroll", checkScrollTop);
+    return () => window.removeEventListener("scroll", checkScrollTop);
+  }, [isScrolling]);
 
   return (
     <div className="container mx-auto">
@@ -104,6 +121,14 @@ const Bookmark = () => {
                 createdAt={videoBookmark.YoutubeVideos.createdAt}
                 userId={null}
               />
+            )}
+            {isScrolling && (
+              <div
+                className="fixed bottom-10 right-0 z-50 mb-4 mr-4 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              >
+                <FaArrowUp />
+              </div>
             )}
           </div>
         ))}

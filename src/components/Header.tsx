@@ -14,6 +14,7 @@ import { BiLogIn, BiLogOut } from "react-icons/bi";
 import { ImHome } from "react-icons/im";
 import Lottie from "lottie-react";
 import burgermenu from "../assets/burger-menu_animated.json";
+import { useRouter } from "next/router";
 
 type HeaderProps = {
   title: string;
@@ -25,6 +26,7 @@ function Header({ title }: HeaderProps) {
   const menuRef = useRef<HTMLDivElement>(null); // Tell TypeScript that the ref will be used on an HTMLDivElement
   const lottieRef = useRef<any>(null);
   const [isClosing, setIsClosing] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (isClosing) {
@@ -180,18 +182,19 @@ function Header({ title }: HeaderProps) {
               </SignedOut>
               <SignedIn>
                 <li className="mr-4 hidden sm:block">
-                  <Link href="/bookmarks" title="Bookmarks">
-                    <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
-                      <BsFillBookmarkFill />
-                    </button>
-                  </Link>
-                </li>
-                <li className="mr-4 block sm:hidden">
-                  <Link href="/bookmarks" title="Bookmarks">
-                    <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
-                      <BsFillBookmarkFill />
-                    </button>
-                  </Link>
+                  {router.pathname === "/bookmarks" ? (
+                    <Link href="/" title="Home">
+                      <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
+                        <ImHome />
+                      </button>
+                    </Link>
+                  ) : (
+                    <Link href="/bookmarks" title="Bookmarks">
+                      <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
+                        <BsFillBookmarkFill />
+                      </button>
+                    </Link>
+                  )}
                 </li>
                 <li className="mr-4">
                   <UserButton />

@@ -11,6 +11,7 @@ import { GrCompliance } from "react-icons/gr";
 import Link from "next/link";
 import Header from "~/components/Header";
 import Footer from "~/components/Footer";
+import { FaArrowUp } from "react-icons/fa";
 
 const Tools: React.FC = () => {
   const toolsData = [
@@ -84,6 +85,21 @@ const Tools: React.FC = () => {
   const onToolClick = (index: number) => {
     setSelectedToolIndex(index);
   };
+
+  const [isScrolling, setIsScrolling] = useState(false);
+
+  useEffect(() => {
+    const checkScrollTop = () => {
+      if (!isScrolling && window.pageYOffset > 400) {
+        setIsScrolling(true);
+      } else if (isScrolling && window.pageYOffset <= 400) {
+        setIsScrolling(false);
+      }
+    };
+
+    window.addEventListener("scroll", checkScrollTop);
+    return () => window.removeEventListener("scroll", checkScrollTop);
+  }, [isScrolling]);
 
   return (
     <div className="container mx-auto pb-20">
