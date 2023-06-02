@@ -67,25 +67,22 @@ const Bookmark = () => {
   const exportBookmarks = () => {
     const { blogBookmarks } = bookmarks;
 
-    // Create the CSV content
     let csvContent = "Title,URL\n";
     blogBookmarks.forEach((bookmark: any) => {
-      const { title, url } = bookmark.BlogPost;
-      csvContent += `${title},${url}\n`;
+      if (bookmark.BlogPost) {
+        const { title, url } = bookmark.BlogPost;
+        csvContent += `${title || ""},${url || ""}\n`;
+      }
     });
 
-    // Create a Blob from the CSV content
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
 
-    // Create a temporary link element
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = "bookmarks.csv";
 
-    // Programmatically click the link to trigger the download
     link.click();
 
-    // Clean up the temporary link element
     URL.revokeObjectURL(link.href);
   };
 
