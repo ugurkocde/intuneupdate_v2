@@ -123,14 +123,14 @@ const MSBlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
 
           <div className="mb-2 mt-2 flex flex-col">
             <div className="mb-2 flex flex-wrap items-center">
-              <BookmarkButton
+              {/*               <BookmarkButton
                 msBlogId={blog.id}
                 userId={user?.id || null}
                 userBookmarks={userBookmarks}
                 blogId={0}
                 intunemsBlogId={0}
                 windowsBlogId={0}
-              />
+              /> */}
               <a href={blog.url} target="_blank" rel="noopener noreferrer">
                 <button
                   className="mb-2 mr-2 rounded border border-gray-300 bg-blue-500 p-4 px-4 py-2 font-bold text-white hover:bg-blue-700 md:mb-0"

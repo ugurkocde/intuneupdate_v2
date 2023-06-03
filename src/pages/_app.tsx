@@ -10,7 +10,7 @@ import {
 import { useRouter } from "next/router";
 import Head from "next/head";
 
-const publicPages = ["/"];
+const publicPages = ["/", "/faq", "/tools"];
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter();
