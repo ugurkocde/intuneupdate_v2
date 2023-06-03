@@ -29,6 +29,12 @@ interface BlogPostCardProps {
   userBookmarks: Record<number, boolean>;
   handleBookmark: (blogId: number) => void;
   handleRemoveBookmark: (blogId: number) => void;
+  id: number;
+  title: string;
+  url: string;
+  author: string;
+  createdAt: string;
+  userId: string | null;
 }
 
 const IntuneMSBlogPostCard = React.forwardRef<

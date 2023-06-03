@@ -252,6 +252,12 @@ function AllCards() {
                     userBookmarks={userBookmarks}
                     handleBookmark={handleAddBookmark}
                     handleRemoveBookmark={handleRemoveBookmarkLocal}
+                    id={0}
+                    title={""}
+                    url={""}
+                    author={""}
+                    createdAt={""}
+                    userId={null}
                   />
                 )}
 
@@ -261,6 +267,12 @@ function AllCards() {
                     userBookmarks={userBookmarks}
                     handleBookmark={handleAddBookmark}
                     handleRemoveBookmark={handleRemoveBookmarkLocal}
+                    id={0}
+                    title={""}
+                    url={""}
+                    author={""}
+                    createdAt={""}
+                    userId={null}
                   />
                 )}
 
