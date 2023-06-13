@@ -102,7 +102,7 @@ const BlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
     return (
       <div
         key={blog.id}
-        className="rounded-lg bg-white p-4 shadow transition-shadow duration-300 hover:shadow-lg"
+        className="h-full rounded-lg bg-white p-4 shadow transition-shadow duration-300 hover:shadow-lg"
         style={{ borderLeft: "4px solid green" }}
         ref={ref}
       >

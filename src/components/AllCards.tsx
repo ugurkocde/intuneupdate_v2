@@ -223,7 +223,7 @@ function AllCards() {
           </div>
         }
       >
-        <div className="ml-2 mr-2 grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid-auto-rows minmax(100px, auto) ml-2 mr-2 grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 lg:grid-cols-3">
           {" "}
           {visibleItems.map((item, index) => {
             if (!item) {
