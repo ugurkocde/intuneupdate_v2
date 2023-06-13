@@ -192,7 +192,7 @@ function Header({ title }: HeaderProps) {
             <ul className="flex items-center justify-end">
               <SignedOut>
                 <li>
-                  <Link href="/sign-in" title="Login">
+                  <Link href="/sign-in" title="Sign in">
                     <BiLogIn className="mr-4 text-4xl" />
                   </Link>
                 </li>
