@@ -219,7 +219,7 @@ const IntuneMSBlogPostCard = React.forwardRef<
           </div>
         </div>
 
-        <div onClick={(event) => event.stopPropagation()}>
+        <div>
           <LikeButton intunemsBlogId={blog.id} userId={user?.id || null} />
         </div>
       </div>

@@ -28,7 +28,7 @@ const SignOutButton = () => {
 
   return (
     <button onClick={handleSignOut} title="Sign out">
-      <BiLogOut className="ml-4 text-4xl" />
+      <BiLogOut className="text-4xl" />
     </button>
   );
 };
@@ -213,6 +213,7 @@ function Header({ title }: HeaderProps) {
                       </button>
                     </Link>
                   )}
+                  <div style={{ marginLeft: "10px" }}></div>
                   <SignOutButton />{" "}
                 </li>
               </SignedIn>

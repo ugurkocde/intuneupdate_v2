@@ -221,7 +221,7 @@ const WindowsBlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
             </div>
           </div>
 
-          <div onClick={(event) => event.stopPropagation()}>
+          <div>
             <LikeButton windowsBlogId={blog.id} userId={user?.id || null} />
           </div>
         </div>

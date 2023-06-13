@@ -98,7 +98,14 @@ const LikeButton: React.FC<LikeButtonProps> = ({
 
   return (
     <div className="flex items-center">
-      <button onClick={handleLike} aria-label="Like the post">
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          handleLike();
+        }}
+        aria-label="Like the post"
+      >
+        {" "}
         {liked ? (
           <AiFillHeart className="text-red-500" />
         ) : (
