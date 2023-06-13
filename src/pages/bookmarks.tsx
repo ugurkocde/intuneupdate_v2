@@ -19,6 +19,8 @@ import WindowsBlogPostCard, {
 } from "~/components/WindowsBlogPostCard";
 import { AiOutlineCloudDownload } from "react-icons/ai";
 import { RxOpenInNewWindow } from "react-icons/rx";
+import Link from "next/link";
+import { IoArrowBackCircleSharp } from "react-icons/io5";
 
 import BookmarkButton from "../components/BookmarkButton";
 
@@ -96,6 +98,17 @@ const Bookmark = () => {
       </div>
 
       <div className="ml-2 mr-2 pb-20">
+        <div className="align-center flex">
+          <Link
+            href="/"
+            className="text-black-500 mb-5 ml-3 flex items-center space-x-2 hover:text-blue-500"
+            title="Back to Home"
+          >
+            <IoArrowBackCircleSharp size={28} />
+            <span>Back to Home</span>
+          </Link>
+        </div>
+
         <div className="mb-4 flex items-center">
           <button
             ref={exportButtonRef}

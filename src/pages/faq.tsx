@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { useTrail, animated } from "@react-spring/web";
 import Header from "~/components/Header";
 import Footer from "~/components/Footer";
+import Link from "next/link";
+import { IoArrowBackCircleSharp } from "react-icons/io5";
 
 const FAQ: React.FC = () => {
   const faqData = [
@@ -80,8 +82,18 @@ const FAQ: React.FC = () => {
 
   return (
     <div className="container mx-auto pb-20">
+      <Header title="FAQ" />
       <div className="mb-4">
-        <Header title="FAQ" />
+        <div className="align-center flex">
+          <Link
+            href="/"
+            className="text-black-500 ml-5 flex items-center space-x-2 hover:text-blue-500"
+            title="Back to Home"
+          >
+            <IoArrowBackCircleSharp size={28} />
+            <span>Back to Home</span>
+          </Link>
+        </div>
       </div>
       <div className="grid gap-4">
         {trail.map((style, index) => (

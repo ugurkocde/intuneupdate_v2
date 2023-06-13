@@ -33,7 +33,12 @@ const YoutubeVideoCard = React.forwardRef<
   return (
     <div
       className="mb-6 h-full rounded-lg bg-white p-4 shadow-md transition-shadow duration-300 hover:shadow-lg"
-      style={{ borderLeft: "4px solid red" }}
+      style={{ borderLeft: "4px solid red", cursor: "pointer" }}
+      ref={ref}
+      onClick={() =>
+        window.open(`https://www.youtube.com/watch?v=${videoId}`, "_blank")
+      }
+      title={title}
     >
       <div className="mb-2">
         <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
@@ -52,7 +57,10 @@ const YoutubeVideoCard = React.forwardRef<
           backgroundSize: "cover",
           cursor: "pointer",
         }}
-        onClick={playVideo}
+        onClick={(event) => {
+          event.stopPropagation();
+          playVideo();
+        }}
       >
         {!isPlaying && (
           <ImPlay2

@@ -12,6 +12,7 @@ import Link from "next/link";
 import Header from "~/components/Header";
 import Footer from "~/components/Footer";
 import { FaArrowUp } from "react-icons/fa";
+import { IoArrowBackCircleSharp } from "react-icons/io5";
 
 const Tools: React.FC = () => {
   const toolsData = [
@@ -106,6 +107,18 @@ const Tools: React.FC = () => {
       <div className="mb-4">
         <Header title="Community Tools" />
       </div>
+
+      <div className="align-center flex">
+        <Link
+          href="/"
+          className="text-black-500 mb-5 ml-5 flex items-center space-x-2 hover:text-blue-500"
+          title="Back to Home"
+        >
+          <IoArrowBackCircleSharp size={28} />
+          <span>Back to Home</span>
+        </Link>
+      </div>
+
       <div
         className="gap-8 lg:grid lg:grid-cols-4"
         style={{ position: "relative" }}
@@ -154,7 +167,7 @@ const Tools: React.FC = () => {
                     className="flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   >
                     <MdOpenInNew className="mr-2" />
-                    Visit Website
+                    Website
                   </a>
                 </div>
                 <p className="mb-4">{toolsData[index]?.overview}</p>

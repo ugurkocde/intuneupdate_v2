@@ -100,7 +100,10 @@ const MSBlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
       <div
         key={blog.id}
         className="h-full rounded-lg bg-white p-4 shadow transition-shadow duration-300 hover:shadow-lg"
-        style={{ borderLeft: "4px solid orange" }}
+        style={{ borderLeft: "4px solid orange", cursor: "pointer" }}
+        ref={ref}
+        onClick={() => window.open(blog.url, "_blank")}
+        title={blog.title}
       >
         <h2 className="mb-2 text-xl font-bold sm:text-lg">{blog.title}</h2>
 
@@ -111,7 +114,7 @@ const MSBlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
             {new Date(blog.date).toLocaleDateString()}
           </p>
 
-          <div>
+          <div onClick={(event) => event.stopPropagation()}>
             {blog.pictureUrl && (
               <a href={blog.url} target="_blank" rel="noopener noreferrer">
                 <img
@@ -128,7 +131,10 @@ const MSBlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
           </div>
 
           <div className="mb-2 mt-2 flex flex-col">
-            <div className="mb-2 flex flex-wrap items-center">
+            <div
+              className="mb-2 flex flex-wrap items-center"
+              onClick={(event) => event.stopPropagation()}
+            >
               {/*               <BookmarkButton
                 msBlogId={blog.id}
                 userId={user?.id || null}
@@ -152,7 +158,10 @@ const MSBlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
               >
                 <button
                   className="mb-2 mr-2 rounded border border-gray-300 px-4 py-2 font-bold hover:border-gray-400 md:mb-0"
-                  onClick={() => toggleDropdown(blog.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleDropdown(blog.id);
+                  }}
                   title="Share"
                 >
                   <FiShare2 />
@@ -208,7 +217,7 @@ const MSBlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
             </div>
           </div>
 
-          <div>
+          <div onClick={(event) => event.stopPropagation()}>
             <LikeButton msBlogId={blog.id} userId={user?.id || null} />
           </div>
         </div>

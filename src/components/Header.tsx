@@ -27,7 +27,7 @@ const SignOutButton = () => {
   };
 
   return (
-    <button onClick={handleSignOut}>
+    <button onClick={handleSignOut} title="Sign out">
       <BiLogOut className="ml-4 text-4xl" />
     </button>
   );

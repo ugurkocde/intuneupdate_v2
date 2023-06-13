@@ -103,11 +103,12 @@ const BlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
       <div
         key={blog.id}
         className="h-full rounded-lg bg-white p-4 shadow transition-shadow duration-300 hover:shadow-lg"
-        style={{ borderLeft: "4px solid green" }}
+        style={{ borderLeft: "4px solid green", cursor: "pointer" }}
         ref={ref}
+        onClick={() => window.open(blog.url, "_blank")}
+        title={blog.title}
       >
         <h2 className="mb-2 text-xl font-bold sm:text-lg">{blog.title}</h2>
-
         <div className="text-gray-700">
           <p className="mb-2 text-sm font-semibold">
             {blog.author}
@@ -116,16 +117,22 @@ const BlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
           </p>
           <div className="mb-2 flex flex-col">
             <div className="mb-2 flex flex-wrap items-center">
-              <BookmarkButton
-                blogId={blog.id}
-                userId={user?.id || null}
-                userBookmarks={userBookmarks}
-                windowsBlogId={0}
-                intunemsBlogId={0}
-                msBlogId={0}
-              />
-
-              <a href={blog.url} target="_blank" rel="noopener noreferrer">
+              <div onClick={(e) => e.stopPropagation()}>
+                <BookmarkButton
+                  blogId={blog.id}
+                  userId={user?.id || null}
+                  userBookmarks={userBookmarks}
+                  windowsBlogId={0}
+                  intunemsBlogId={0}
+                  msBlogId={0}
+                />
+              </div>
+              <a
+                href={blog.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <button
                   className="mb-2 mr-2 rounded border border-gray-300 bg-blue-500 p-4 px-4 py-2 font-bold text-white hover:bg-blue-700 md:mb-0"
                   title="Open blog post in a new tab"
@@ -133,19 +140,20 @@ const BlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
                   <RxOpenInNewWindow />
                 </button>
               </a>
-
               <div
                 className="relative inline-block"
                 ref={shareButtonContainerRef}
               >
                 <button
                   className="mb-2 mr-2 rounded border border-gray-300 px-4 py-2 font-bold hover:border-gray-400 md:mb-0"
-                  onClick={() => toggleDropdown(blog.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleDropdown(blog.id);
+                  }}
                   title="Share"
                 >
                   <FiShare2 />
                 </button>
-
                 {openDropdownId === blog.id && (
                   <div
                     ref={dropdownRef}
@@ -157,10 +165,15 @@ const BlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
                       role="menu"
                       aria-orientation="vertical"
                       aria-labelledby="options-menu"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleDropdown(blog.id);
+                      }}
                     >
                       <button
                         className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           shareOnTwitter(blog.title, blog.url);
                           toggleDropdown(blog.id);
                         }}
@@ -170,7 +183,8 @@ const BlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
                       </button>
                       <button
                         className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           shareOnLinkedIn(blog.url);
                           toggleDropdown(blog.id);
                         }}
@@ -178,10 +192,10 @@ const BlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
                         <BsLinkedin className="mr-2" />
                         <span>Share on LinkedIn</span>
                       </button>
-
                       <button
                         className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           copyURL(blog.url);
                           toggleDropdown(blog.id);
                         }}
@@ -194,26 +208,18 @@ const BlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
                 )}
               </div>
             </div>
-
-            {/*             <button
-              className="mt-2 w-full rounded bg-gray-100 py-2 text-gray-700 hover:bg-gray-200"
-              onClick={() => toggleSummary(blog.id)}
+            <div
+              className={`mt-2 overflow-y-auto rounded p-2 text-gray-600 transition-all duration-200 ${
+                openSummary === blog.id
+                  ? "max-h-50 opacity-100"
+                  : "max-h-0 opacity-0"
+              }`}
             >
-              {openSummary === blog.id ? "Hide Summary" : "Show Summary"}
-            </button> */}
-          </div>
-
-          <div
-            className={`mt-2 overflow-y-auto rounded p-2 text-gray-600 transition-all duration-200 ${
-              openSummary === blog.id
-                ? "max-h-50 opacity-100"
-                : "max-h-0 opacity-0"
-            }`}
-          >
-            {blog.summary}
-          </div>
-          <div>
-            <LikeButton blogId={blog.id} userId={user?.id || null} />
+              {blog.summary}
+            </div>
+            <div onClick={(e) => e.stopPropagation()}>
+              <LikeButton blogId={blog.id} userId={user?.id || null} />
+            </div>
           </div>
         </div>
       </div>
