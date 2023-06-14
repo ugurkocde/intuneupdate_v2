@@ -140,6 +140,7 @@ const BlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
                   <RxOpenInNewWindow />
                 </button>
               </a>
+
               <div
                 className="relative inline-block"
                 ref={shareButtonContainerRef}
