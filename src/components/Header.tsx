@@ -183,7 +183,7 @@ function Header({ title }: HeaderProps) {
             </div>
           </div>
 
-          <div className="w-full text-center">
+          <div>
             <h1 className="mb-4 mt-2 text-2xl font-bold sm:text-5xl">
               {title}
             </h1>
