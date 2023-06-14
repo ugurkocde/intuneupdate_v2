@@ -37,7 +37,7 @@ const Home: NextPage = () => {
 
   return (
     <div className="container mx-auto">
-      <div className="mb-4">
+      <div className="mb-4 pt-16">
         <Header title="Intune Update" />
       </div>
 

@@ -82,12 +82,12 @@ function Header({ title }: HeaderProps) {
 
   return (
     <div
-      className={`sticky top-0 z-50 bg-white ${
+      className={`fixed left-0 top-0 z-50 bg-white ${
         hasShadow ? "border-b border-gray-200 shadow shadow-lg " : ""
-      }`}
+      } flex  w-screen items-center justify-center`}
     >
       <div className="container mx-auto">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between ">
           <div className="relative ml-2" title="Menu">
             <Lottie
               lottieRef={lottieRef}
@@ -184,7 +184,7 @@ function Header({ title }: HeaderProps) {
           </div>
 
           <div className="w-full text-center">
-            <h1 className="mb-4 mt-2 text-4xl font-bold sm:text-5xl">
+            <h1 className="mb-4 mt-2 text-2xl font-bold sm:text-5xl">
               {title}
             </h1>
           </div>
