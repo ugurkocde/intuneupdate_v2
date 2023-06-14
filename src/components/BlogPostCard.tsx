@@ -141,6 +141,20 @@ const BlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
                 </button>
               </a>
 
+              <a
+                href={`/api/pdf?url=${encodeURIComponent(blog.url)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  className="mb-2 mr-2 rounded border border-gray-300 bg-blue-500 p-4 px-4 py-2 font-bold text-white hover:bg-blue-700 md:mb-0"
+                  title="Download blog post as a PDF"
+                >
+                  Download as PDF
+                </button>
+              </a>
+
               <div
                 className="relative inline-block"
                 ref={shareButtonContainerRef}
