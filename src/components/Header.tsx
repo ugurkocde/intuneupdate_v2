@@ -11,6 +11,7 @@ import {
 import { FaQuestionCircle } from "react-icons/fa";
 import { IoNewspaperOutline } from "react-icons/io5";
 import { BiLogIn, BiLogOut } from "react-icons/bi";
+import { GrContact } from "react-icons/gr";
 import { ImHome } from "react-icons/im";
 import Lottie from "lottie-react";
 import burgermenu from "../assets/burger-menu_animated.json";
@@ -175,6 +176,18 @@ function Header({ title }: HeaderProps) {
                         {" "}
                         <IoNewspaperOutline />
                         <span className="ml-2">Newsletter</span>
+                      </button>
+                    </a>
+                    <a
+                      href="https://twitter.com/ugurkocde"
+                      target="_blank"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white"
+                      role="menuitem"
+                    >
+                      <button className="flex w-full items-center font-bold">
+                        {" "}
+                        <GrContact />
+                        <span className="ml-2">Contact</span>
                       </button>
                     </a>
                   </div>
