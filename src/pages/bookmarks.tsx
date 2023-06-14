@@ -92,7 +92,7 @@ const Bookmark = () => {
   const exportButtonRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto pt-20">
       <div className="mb-4">
         <Header title="My Bookmarks" />
       </div>
