@@ -81,7 +81,7 @@ const FAQ: React.FC = () => {
   }, []);
 
   return (
-    <div className="container mx-auto pb-20">
+    <div className="container mx-auto pb-20 pt-20">
       <Header title="FAQ" />
       <div className="mb-4">
         <div className="align-center flex">
