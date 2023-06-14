@@ -1,8 +1,4 @@
 import React, { useState } from "react";
-import VideoLikeButton from "../pages/VideoLikeButton";
-import VideoBookmarkButton from "../components/VideoBookmarkButton";
-import { getUserVideoBookmarks } from "../videoBookmarks";
-import { ImYoutube } from "react-icons/im";
 import { ImPlay2 } from "react-icons/im";
 
 interface YoutubeVideoCardProps {
