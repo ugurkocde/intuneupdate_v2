@@ -11,6 +11,8 @@ import {
 import { FaQuestionCircle } from "react-icons/fa";
 import { IoNewspaperOutline } from "react-icons/io5";
 import { BiLogIn, BiLogOut } from "react-icons/bi";
+import { MdPublishedWithChanges } from "react-icons/md";
+import { TbRoad } from "react-icons/tb";
 import { GrContact } from "react-icons/gr";
 import { ImHome } from "react-icons/im";
 import Lottie from "lottie-react";
@@ -154,6 +156,33 @@ function Header({ title }: HeaderProps) {
                         <span className="ml-2">Tools</span>
                       </button>
                     </Link>
+
+                    <a
+                      href="https://learn.microsoft.com/en-us/mem/intune/fundamentals/whats-new"
+                      target="_blank"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white"
+                      role="menuitem"
+                    >
+                      <button className="flex w-full items-center font-bold">
+                        {" "}
+                        <MdPublishedWithChanges />
+                        <span className="ml-2">What´s New</span>
+                      </button>
+                    </a>
+
+                    <a
+                      href="https://learn.microsoft.com/en-us/mem/intune/fundamentals/in-development"
+                      target="_blank"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white"
+                      role="menuitem"
+                    >
+                      <button className="flex w-full items-center font-bold">
+                        {" "}
+                        <TbRoad />
+                        <span className="ml-2">In development</span>
+                      </button>
+                    </a>
+
                     <a
                       href="https://www.linkedin.com/groups/8761296/"
                       target="_blank"
