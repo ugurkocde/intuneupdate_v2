@@ -27,7 +27,7 @@ export default async function handler(
 
     await page.goto(url, { waitUntil: "networkidle2" });
 
-    const pdf = await page.pdf({ format: "A4" });
+    const pdf = await page.pdf({ format: "a4" });
 
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Length", pdf.length.toString());
