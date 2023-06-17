@@ -20,7 +20,10 @@ import burgermenu from "../assets/burger-menu_animated.json";
 import { useRouter } from "next/router";
 import { useClerk } from "@clerk/clerk-react";
 import Newsletter_Modal from "./Newsletter_Modal";
+import PostCount_Modal from "./PostCount_Modal";
 import { SlEnvolopeLetter } from "react-icons/sl";
+import { IoStatsChartOutline } from "react-icons/io5";
+import axios from "axios";
 
 const SignOutButton = () => {
   const { signOut } = useClerk();
@@ -93,6 +96,36 @@ function Header({ title }: HeaderProps) {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const [postCount, setPostCount] = useState(0);
+  const [dailyPostCount, setDailyPostCount] = useState(0);
+  const [weeklyPostCount, setWeeklyPostCount] = useState(0);
+  const [monthlyPostCount, setMonthlyPostCount] = useState(0);
+  const [totalPostCount, setTotalPostCount] = useState(0);
+
+  useEffect(() => {
+    axios
+      .get("/api/postCount")
+      .then((response) => {
+        setDailyPostCount(response.data.dailyPostCount);
+        setWeeklyPostCount(response.data.weeklyPostCount);
+        setMonthlyPostCount(response.data.monthlyPostCount);
+        setTotalPostCount(response.data.totalPostCount);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  const [isPostCountModalOpen, setIsPostCountModalOpen] = useState(false);
+
+  const openPostCountModal = () => {
+    setIsPostCountModalOpen(true);
+  };
+
+  const closePostCountModal = () => {
+    setIsPostCountModalOpen(false);
   };
 
   return (
@@ -233,6 +266,23 @@ function Header({ title }: HeaderProps) {
               <SlEnvolopeLetter className="mr-4 text-2xl" />
             </button>
             <Newsletter_Modal isOpen={isModalOpen} closeModal={closeModal} />
+
+            <button
+              onClick={openPostCountModal}
+              className="ml-2 flex items-center focus:outline-none"
+              title="Statistics"
+            >
+              <IoStatsChartOutline className="mr-4 text-2xl" />
+            </button>
+
+            <PostCount_Modal
+              isOpen={isPostCountModalOpen}
+              closeModal={closePostCountModal}
+              dailyPostCount={dailyPostCount}
+              weeklyPostCount={weeklyPostCount}
+              monthlyPostCount={monthlyPostCount}
+              totalPostCount={totalPostCount}
+            />
           </div>
 
           <div>
