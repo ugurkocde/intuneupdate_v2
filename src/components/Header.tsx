@@ -19,6 +19,8 @@ import Lottie from "lottie-react";
 import burgermenu from "../assets/burger-menu_animated.json";
 import { useRouter } from "next/router";
 import { useClerk } from "@clerk/clerk-react";
+import Newsletter_Modal from "./Newsletter_Modal";
+import { SlEnvolopeLetter } from "react-icons/sl";
 
 const SignOutButton = () => {
   const { signOut } = useClerk();
@@ -83,6 +85,16 @@ function Header({ title }: HeaderProps) {
     }
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div
       className={`fixed left-0 top-0 z-50 bg-white ${
@@ -91,7 +103,7 @@ function Header({ title }: HeaderProps) {
     >
       <div className="container mx-auto">
         <div className="flex items-center justify-between ">
-          <div className="relative ml-2" title="Menu">
+          <div className="relative ml-2 flex items-center" title="Menu">
             <Lottie
               lottieRef={lottieRef}
               onClick={handleBurgerClick}
@@ -195,18 +207,7 @@ function Header({ title }: HeaderProps) {
                         <span className="ml-2">LinkedIn Group</span>
                       </button>
                     </a>
-                    <a
-                      href="https://andrewstaylor.com/"
-                      target="_blank"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white"
-                      role="menuitem"
-                    >
-                      <button className="flex w-full items-center font-bold">
-                        {" "}
-                        <IoNewspaperOutline />
-                        <span className="ml-2">Newsletter</span>
-                      </button>
-                    </a>
+
                     <a
                       href="https://twitter.com/ugurkocde"
                       target="_blank"
@@ -223,6 +224,15 @@ function Header({ title }: HeaderProps) {
                 </div>
               )}
             </div>
+
+            <button
+              onClick={openModal}
+              className="ml-2 flex items-center focus:outline-none"
+              title="Subscribe to the Newsletter"
+            >
+              <SlEnvolopeLetter className="mr-4 text-2xl" />
+            </button>
+            <Newsletter_Modal isOpen={isModalOpen} closeModal={closeModal} />
           </div>
 
           <div>

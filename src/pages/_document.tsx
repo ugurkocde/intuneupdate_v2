@@ -19,6 +19,9 @@ class MyDocument extends Document {
             data-domain="intuneupdate.com"
             src="https://plausible.io/js/script.js"
           ></script>
+
+          {/* Add the SendFox script here */}
+          <script defer src="https://sendfox.com/js/form.js"></script>
         </Head>
         <body>
           <Main />
