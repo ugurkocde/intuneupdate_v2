@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import LikeButton from "../pages/LikeButton";
 import { useUser } from "@clerk/clerk-react";
 import BookmarkButton from "./BookmarkButton";
+import SummaryModal from "./Summary_Modal";
 
 export interface BlogData {
   id: number;
@@ -99,22 +100,37 @@ const BlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
       };
     }, []);
 
+    const [summaryModalOpen, setSummaryModalOpen] = useState(false);
+
     return (
       <div
         key={blog.id}
         className="h-full rounded-lg bg-white p-4 shadow transition-shadow duration-300 hover:shadow-lg"
-        style={{ borderLeft: "4px solid green", cursor: "pointer" }}
+        style={{
+          borderLeft: "4px solid green",
+          cursor: "pointer",
+          position: "relative",
+          paddingBottom: "50px", // Set this as per the height of LikeButton
+        }}
         ref={ref}
-        onClick={() => window.open(blog.url, "_blank")}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            window.open(blog.url, "_blank");
+          }
+        }}
         title={blog.title}
       >
-        <h2 className="mb-2 text-xl font-bold sm:text-lg">{blog.title}</h2>
         <div className="text-gray-700">
-          <p className="mb-2 text-sm font-semibold">
-            {blog.author}
-            <span className="mx-1">-</span>
-            {new Date(blog.createdAt).toLocaleDateString()}
-          </p>
+          <div onClick={() => window.open(blog.url, "_blank")}>
+            <h2 className="mb-2 text-xl font-bold sm:text-lg">{blog.title}</h2>
+            <div className="text-gray-700">
+              <p className="mb-2 text-sm font-semibold">
+                {blog.author}
+                <span className="mx-1">-</span>
+                {new Date(blog.createdAt).toLocaleDateString()}
+              </p>
+            </div>
+          </div>
           <div className="mb-2 flex flex-col">
             <div className="mb-2 flex flex-wrap items-center">
               <div onClick={(e) => e.stopPropagation()}>
@@ -209,16 +225,24 @@ const BlogPostCard = React.forwardRef<HTMLDivElement, BlogPostCardProps>(
                 )}
               </div>
             </div>
-            <div
-              className={`mt-2 overflow-y-auto rounded p-2 text-gray-600 transition-all duration-200 ${
-                openSummary === blog.id
-                  ? "max-h-50 opacity-100"
-                  : "max-h-0 opacity-0"
-              }`}
+
+            <SummaryModal
+              isOpen={summaryModalOpen}
+              closeModal={() => setSummaryModalOpen(false)}
+              summary={blog.summary}
+              title={blog.title}
+            />
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setSummaryModalOpen(true);
+              }}
+              className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm"
             >
-              {blog.summary}
-            </div>
-            <div>
+              Show Summary
+            </button>
+
+            <div style={{ position: "absolute", bottom: "10px", left: "10px" }}>
               <LikeButton blogId={blog.id} userId={user?.id || null} />
             </div>
           </div>

@@ -144,7 +144,7 @@ function Header({ title }: HeaderProps) {
               autoplay={false}
               loop={false}
               style={{ cursor: "pointer", width: 50, height: 50 }} // Adjust the size as you need
-              className="rounded hover:bg-blue-200 focus:outline-none"
+              className="rounded hover:bg-gray-50 focus:outline-none"
             />
             <div
               ref={menuRef}
@@ -261,7 +261,7 @@ function Header({ title }: HeaderProps) {
 
             <button
               onClick={openModal}
-              className="flex items-center rounded p-2 hover:bg-blue-200 focus:outline-none"
+              className="flex items-center rounded p-2 hover:bg-gray-50 focus:outline-none"
               title="Subscribe to the Newsletter"
             >
               <SlEnvolopeLetter className="m-1 text-3xl" />
@@ -270,7 +270,7 @@ function Header({ title }: HeaderProps) {
 
             <button
               onClick={openPostCountModal}
-              className="flex items-center rounded p-2 hover:bg-blue-200 focus:outline-none"
+              className="flex items-center rounded p-2 hover:bg-gray-50 focus:outline-none"
               title="Statistics"
             >
               <IoStatsChartOutline className="mr-1 text-3xl" />
@@ -309,7 +309,7 @@ function Header({ title }: HeaderProps) {
                     </Link>
                   ) : (
                     <Link href="/bookmarks" title="My Bookmarks">
-                      <button className="rounded p-2 text-2xl font-bold hover:bg-blue-200">
+                      <button className="rounded p-2 text-2xl font-bold hover:bg-gray-50">
                         <BsFillBookmarksFill />
                       </button>
                     </Link>

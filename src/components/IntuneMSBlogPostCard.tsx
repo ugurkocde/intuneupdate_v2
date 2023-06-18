@@ -102,7 +102,12 @@ const IntuneMSBlogPostCard = React.forwardRef<
     <div
       key={blog.id}
       className="h-full rounded-lg bg-white p-4 shadow transition-shadow duration-300 hover:shadow-lg"
-      style={{ borderLeft: "4px solid orange", cursor: "pointer" }}
+      style={{
+        borderLeft: "4px solid orange",
+        cursor: "pointer",
+        position: "relative",
+        paddingBottom: "50px", // Set this as per the height of LikeButton
+      }}
       onClick={() => window.open(blog.url, "_blank")}
       title={blog.title}
     >
@@ -219,7 +224,7 @@ const IntuneMSBlogPostCard = React.forwardRef<
           </div>
         </div>
 
-        <div>
+        <div style={{ position: "absolute", bottom: "10px", left: "10px" }}>
           <LikeButton intunemsBlogId={blog.id} userId={user?.id || null} />
         </div>
       </div>
