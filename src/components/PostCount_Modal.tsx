@@ -23,7 +23,7 @@ const PostCount_Modal = ({
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
+      <div className="flex min-h-screen items-center justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
         <div
           className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
           aria-hidden="true"
@@ -43,7 +43,7 @@ const PostCount_Modal = ({
         >
           <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
             <h3
-              className="text-center text-lg font-medium leading-6 text-gray-900"
+              className="text-center text-lg font-bold  leading-6 text-gray-900"
               id="modal-headline"
             >
               Statistics
@@ -51,13 +51,13 @@ const PostCount_Modal = ({
 
             <div className="mt-5 text-center">
               <p>
-                Today: <strong>{dailyPostCount}</strong> blog posts.
+                Today: <strong>{dailyPostCount}</strong> new blog posts.
               </p>
               <p>
-                This week: <strong>{weeklyPostCount}</strong> blog posts.
+                This week: <strong>{weeklyPostCount}</strong> new blog posts.
               </p>
               <p>
-                This month: <strong>{monthlyPostCount}</strong> blog posts.
+                This month: <strong>{monthlyPostCount}</strong> new blog posts.
               </p>
               <p>
                 Total: <strong>{totalPostCount}</strong> blog posts.

@@ -10,7 +10,7 @@ const Footer: React.FC = () => (
       <div className="flex items-center justify-between space-x-4">
         <div className="flex items-center space-x-4">
           <a
-            href="https://twitter.com/IntuneUpdate"
+            href="https://twitter.com/ugurkocde"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Twitter"
@@ -19,7 +19,7 @@ const Footer: React.FC = () => (
             <BsTwitter className="text-xl hover:text-blue-500" />
           </a>
           <a
-            href="https://twitter.com/IntuneUpdate"
+            href="https://twitter.com/messages/compose?recipient_id=1465361386293374988"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-blue-500"

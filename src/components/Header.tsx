@@ -6,7 +6,7 @@ import {
   BsTools,
   BsLinkedin,
   BsFillJournalBookmarkFill,
-  BsFillBookmarkFill,
+  BsFillBookmarksFill,
 } from "react-icons/bs";
 import { FaQuestionCircle } from "react-icons/fa";
 import { IoNewspaperOutline } from "react-icons/io5";
@@ -136,7 +136,7 @@ function Header({ title }: HeaderProps) {
     >
       <div className="container mx-auto">
         <div className="flex items-center justify-between ">
-          <div className="relative ml-2 flex items-center" title="Menu">
+          <div className="relative ml-4 flex items-center" title="Menu">
             <Lottie
               lottieRef={lottieRef}
               onClick={handleBurgerClick}
@@ -144,6 +144,7 @@ function Header({ title }: HeaderProps) {
               autoplay={false}
               loop={false}
               style={{ cursor: "pointer", width: 50, height: 50 }} // Adjust the size as you need
+              className="rounded hover:bg-blue-200 focus:outline-none"
             />
             <div
               ref={menuRef}
@@ -242,7 +243,7 @@ function Header({ title }: HeaderProps) {
                     </a>
 
                     <a
-                      href="https://twitter.com/ugurkocde"
+                      href="https://twitter.com/messages/compose?recipient_id=1465361386293374988"
                       target="_blank"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white"
                       role="menuitem"
@@ -260,21 +261,20 @@ function Header({ title }: HeaderProps) {
 
             <button
               onClick={openModal}
-              className="ml-2 flex items-center focus:outline-none"
+              className="flex items-center rounded p-2 hover:bg-blue-200 focus:outline-none"
               title="Subscribe to the Newsletter"
             >
-              <SlEnvolopeLetter className="mr-4 text-2xl" />
+              <SlEnvolopeLetter className="m-1 text-3xl" />
             </button>
             <Newsletter_Modal isOpen={isModalOpen} closeModal={closeModal} />
 
             <button
               onClick={openPostCountModal}
-              className="ml-2 flex items-center focus:outline-none"
+              className="flex items-center rounded p-2 hover:bg-blue-200 focus:outline-none"
               title="Statistics"
             >
-              <IoStatsChartOutline className="mr-4 text-2xl" />
+              <IoStatsChartOutline className="mr-1 text-3xl" />
             </button>
-
             <PostCount_Modal
               isOpen={isPostCountModalOpen}
               closeModal={closePostCountModal}
@@ -284,7 +284,6 @@ function Header({ title }: HeaderProps) {
               totalPostCount={totalPostCount}
             />
           </div>
-
           <div>
             <h1 className="mb-4 mt-2 text-2xl font-bold sm:text-5xl">
               {title}
@@ -309,9 +308,9 @@ function Header({ title }: HeaderProps) {
                       </button>
                     </Link>
                   ) : (
-                    <Link href="/bookmarks" title="Bookmarks">
-                      <button className="rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700">
-                        <BsFillBookmarkFill />
+                    <Link href="/bookmarks" title="My Bookmarks">
+                      <button className="rounded p-2 text-2xl font-bold hover:bg-blue-200">
+                        <BsFillBookmarksFill />
                       </button>
                     </Link>
                   )}
